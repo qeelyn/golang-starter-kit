@@ -37,3 +37,4 @@ INTERNAL_SERVER_ERROR 对应error的消息文本,通过消息文本的全等匹�
 
 TODO
 
+[下一节 日志](application-log.md)
