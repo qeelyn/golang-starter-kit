@@ -5,7 +5,7 @@ Graphql
 * 统一的编程模型,方便跟踪与性能提升,比api这样的黑洞更友好.
 * 基于模型的定义访问,能应对各种需求变化,原型上,基于同一套模型的前端设计,接口是不需要更改的.
 
-[graphql-go]((github.com/graph-gophers/graphql-go)的参考资料较少,本质上需要对js版本的graphql有一定的了解,再参考示例代码,学习一下基础知识.
+[graphql-go](github.com/graph-gophers/graphql-go)的参考资料较少,本质上需要对js版本的graphql有一定的了解,再参考示例代码,学习一下基础知识.
 
 graphql属于Web层,与gin是相配置的.
 
