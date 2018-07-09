@@ -1,0 +1,9 @@
+schema {
+    query: Query
+#    mutation: Mutation
+}
+
+type Query {
+    # 查询
+    hello(name: String!):Greeter
+}

@@ -1,0 +1,35 @@
+appname: srv-fof
+listen: ":8002"
+appmode: release
+log:
+  file:
+    filename: ""
+    maxsize: 100
+    maxbackups: 3
+    maxage: 28
+    level: 1 #debug:-1;info:0;warning:1;error:2;DPanic:3;Panic:4;Fatal:5
+
+error-template: ""
+
+db:
+  default:
+    dialect: postgres
+    dsn: host=host port=5432 user= dbname=advisorq_mtdb password= sslmode=disable
+
+auth:
+  auth-server: ""
+  check-access: ""
+  check-access-timeout: 1000 #microsecond
+  public-key: ""
+  router-prefix: ""
+
+opentracing:
+  sampler:
+    type: const
+    param: 1
+  reporter:
+    logSpans: false
+    localAgentHostPort: "127.0.0.1:6831"
+
+metrics:
+  backend: prometheus

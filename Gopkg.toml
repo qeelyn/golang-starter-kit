@@ -1,0 +1,64 @@
+
+[[constraint]]
+  name = "github.com/gin-gonic/gin"
+  version = "1.2.0"
+
+[[override]]
+  name = "github.com/golang/protobuf"
+  version = "1.1.0"
+
+[[constraint]]
+  name = "github.com/jinzhu/gorm"
+  version = "1.9.1"
+
+[[constraint]]
+  branch = "master"
+  name = "github.com/qeelyn/go-common"
+
+[[constraint]]
+  name = "github.com/spf13/viper"
+  version = "1.0.2"
+
+[[constraint]]
+  name = "go.uber.org/zap"
+  version = "1.8.0"
+
+[[constraint]]
+  name = "gopkg.in/yaml.v2"
+  version = "2.2.1"
+
+[prune]
+  go-tests = true
+  unused-packages = true
+  [[prune.project]]
+    name = "github.com/qeelyn/go-common"
+    unused-packages = false
+
+[[constraint]]
+  branch = "master"
+  name = "github.com/qeelyn/gin-contrib"
+
+[[constraint]]
+  branch = "master"
+  name = "github.com/graph-gophers/graphql-go"
+  source = "github.com/qeelyn/graphql-go"
+
+[[constraint]]
+  name = "github.com/graph-gophers/dataloader"
+  version = "5.0.0"
+
+[[constraint]]
+  name = "github.com/uber/jaeger-client-go"
+  version = "2.14.0"
+
+[[constraint]]
+  name = "github.com/patrickmn/go-cache"
+  version = "2.1.0"
+
+[[constraint]]
+  name = "github.com/satori/go.uuid"
+  version = "1.2.0"
+
+[[constraint]]
+  name = "github.com/grpc-ecosystem/go-grpc-middleware"
+  version = "1.0.0"

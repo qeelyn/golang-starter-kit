@@ -1,0 +1,181 @@
+package app
+
+import (
+	"bytes"
+	"context"
+	"encoding/json"
+	"github.com/dgrijalva/jwt-go"
+	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin/binding"
+	"github.com/pkg/errors"
+	"github.com/qeelyn/gin-contrib/auth"
+	errors2 "github.com/qeelyn/golang-starter-kit/api/errors"
+	"go.uber.org/zap"
+	"io"
+	"io/ioutil"
+	"net/http"
+	"strings"
+	"time"
+)
+
+var (
+	AuthMiddleware        *auth.GinJWTMiddleware
+	CheckAccessMiddleware *auth.CheckAccess
+	checkAccessUrl        string
+	checkAccessTimeout    int
+)
+
+// Ginzap returns a gin.HandlerFunc (middleware) that logs requests using uber-go/zap.
+//
+// Requests with errors are logged using zap.Error().
+// Requests without errors are logged using zap.Info().
+//
+func AccessLogHandleFunc(logger *zap.Logger, timeFormat string, utc bool) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		start := time.Now()
+		// some evil middlewares modify this values
+		path := c.Request.URL.Path
+		query := c.Request.URL.RawQuery
+		bodyCopy := &bytes.Buffer{}
+		if c.Request.Method == "POST" {
+			switch c.ContentType() {
+			case binding.MIMEJSON, binding.MIMEPOSTForm, binding.MIMEXML:
+				io.Copy(bodyCopy, c.Request.Body)
+				c.Request.Body = ioutil.NopCloser(bytes.NewReader(bodyCopy.Bytes()))
+			}
+		}
+		if orgId := c.GetHeader("Qeelyn-Org-Id"); orgId != "" {
+			c.Set("orgid", orgId)
+		}
+
+		c.Next()
+
+		end := time.Now()
+		latency := end.Sub(start)
+		if utc {
+			end = end.UTC()
+		}
+
+		logger.Info(path,
+			zap.Int("status", c.Writer.Status()),
+			zap.String("method", c.Request.Method),
+			zap.String("path", path),
+			zap.String("query", query),
+			zap.ByteString("body", bodyCopy.Bytes()),
+			zap.String("ip", c.ClientIP()),
+			zap.String("auth", c.GetString("userId")),
+			zap.String("user-agent", c.Request.UserAgent()),
+			zap.String("time", end.Format(timeFormat)),
+			zap.Duration("latency", latency),
+		)
+	}
+}
+
+// auth will check the jwt token basically
+func AuthHandleFunc(config map[string]interface{}) gin.HandlerFunc {
+	// the jwt middleware
+	AuthMiddleware = &auth.GinJWTMiddleware{
+		Realm:      "auth server",
+		PubKeyFile: config["public-key"].(string),
+		UnauthorizedHandle: func(c *gin.Context, code int, message string) bool {
+			if IsDebug && c.GetHeader("Authorization") == "" {
+				if tid, ok := config["testuserid"]; ok {
+					c.Set("userId", tid.(string))
+				}
+				c.Next()
+				return false
+			}
+			c.JSON(code, gin.H{
+				"errors": []map[string]interface{}{
+					{
+						"code":    code,
+						"message": message,
+					},
+				},
+			})
+			return true
+		},
+		TokenValidator: func(token *jwt.Token, c *gin.Context) bool {
+			c.Set("authorization", c.GetHeader("Authorization"))
+			return true
+		},
+		TokenLookup:   "header:Authorization",
+		TokenHeadName: "Bearer",
+	}
+	return AuthMiddleware.Handle()
+
+}
+
+func CheckAccessHandleFunc(config map[string]interface{}) gin.HandlerFunc {
+	CheckAccessMiddleware = NewCheckAccess(config)
+	return CheckAccessMiddleware.CheckAccessHandle()
+}
+
+// userId will be exist after bearer auth middleware execute
+func NewCheckAccess(config map[string]interface{}) *auth.CheckAccess {
+	checkAccessUrl = config["check-access"].(string)
+	routerPrefix := config["router-prefix"].(string)
+	checkAccessTimeout = config["check-access-timeout"].(int)
+	instance := &auth.CheckAccess{
+		GetPermissionFunc: func(context *gin.Context) string {
+			path := context.Request.URL.Path
+			if strings.HasPrefix(path, routerPrefix) {
+				return path[len(routerPrefix):]
+			} else {
+				return path
+			}
+		},
+		CheckFunc: func(context *http.Request, userId string, permission string, params map[string]interface{}) int {
+			if IsDebug && context.Header.Get("Authorization") == "" {
+				return http.StatusOK
+			}
+			body, err := json.Marshal(map[string]interface{}{
+				"permission": permission,
+				"params":     params,
+			})
+			if err != nil {
+				Logger.Errorf("error on CheckFunc : %s", err)
+				return http.StatusBadRequest
+			}
+			client := http.Client{
+				Timeout: time.Duration(checkAccessTimeout) * time.Millisecond,
+			}
+			req, _ := http.NewRequest("POST", checkAccessUrl, bytes.NewReader(body))
+			req.Header.Set("Content-Type", "application/json")
+			req.Header.Set("Authorization", context.Header.Get("Authorization"))
+
+			if authRes, err := client.Do(req); err == nil {
+				return authRes.StatusCode
+			} else {
+				Logger.Errorf("error on auth client request : %s", err)
+				return http.StatusInternalServerError
+			}
+		},
+	}
+	return instance
+}
+
+func CheckAccess(ctx context.Context, permission string, params map[string]interface{}) (bool, error) {
+	var userId, orgId string
+	var ok bool
+	var err error
+	if userId, ok = ctx.Value("userid").(string); !ok {
+		err = errors2.ErrUnauthorized
+	}
+	if orgId, ok = ctx.Value("orgid").(string); ok {
+		if params == nil {
+			params = map[string]interface{}{}
+		}
+		params["org_id"] = orgId
+	}
+	req := ctx.Value(0).(*http.Request)
+
+	if code := CheckAccessMiddleware.CheckFunc(req, userId, permission, params); code != http.StatusOK {
+		if code == http.StatusForbidden {
+			err = errors2.ErrPermissionDenied
+			Logger.Warnf("userId %s has no permission at %s", userId, permission)
+		}
+		err = errors.New(http.StatusText(code))
+	}
+	return err == nil, err
+}

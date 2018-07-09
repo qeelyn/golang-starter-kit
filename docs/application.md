@@ -11,7 +11,7 @@
 // 应用程序名
 appname: "myApp"
 // 监听地址 host:port
-httplisten: ":9097"
+listen: ":9097"
 // 应用模式,生产或测试环境切换
 appmode: debug
 ```
@@ -21,7 +21,12 @@ appmode: debug
 
 ### 应用组件
 
+以下列出一些顶层组件,
+
 * [缓存](application-cache.md)
 * [数据库](application-db.md)
+* [授权](auth.md)
+* [OpenTracing](application-opentracing.md) 分布式跟踪
+* [metrics](application-metrics.md) 系统运行指标监控
 
 [下一节 模型定义-protobuf](use-protobuf.md)

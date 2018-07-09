@@ -1,0 +1,8 @@
+type Greeter implements Node {
+    # 访问id
+    id: ID!
+    # 消息
+    msg: String!
+    # 访问时间
+    date: Time
+}

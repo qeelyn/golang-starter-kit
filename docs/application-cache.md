@@ -26,3 +26,10 @@ cache:
     duration: 10 #默认时间 分钟
     gc: 30 # 分钟
 ```
+
+使用
+--------
+```go
+app.Cache.Get //使用默认default设置
+app.Caches["auth"].Get 使用auth设置
+```

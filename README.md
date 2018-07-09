@@ -20,7 +20,7 @@
 
 * 路由框架: [gin](http://github.com/gin-gonic/gin)
 * 数据库及ORM: [gorm](http://github.com/jinzhu/gorm)
-* 数据验证: 目前通过Gin在路由层处理
+* 数据验证: 目前通过Gin在路由层处理,还有很式工作 [want help]
 * 配置文件: [viper](http://github.com/spf13/viper)
 * 日志: [Uber Zap](http://go.uber.org/zap)
 * graphql: [gopher-graphql](github.com/graph-gophers/graphql-go)
@@ -28,8 +28,15 @@
 * 基础套件:[qeelyn-common](http://github.com/qeelyn/go-common)
   - 缓存 cache 内置支持local,redis,memcached
   - protobuf工具包
+  - grpc 一些的微服务工具包
 * 中间件与组件: [qeelyn-contrib](http://github.com/qeelyn/gin-contrib)
-* protoc生成工具扩展: [protoc-gen-goql](http://github.com/tsingsun/protoc-gen-goql)  
+* protoc生成工具扩展: [protoc-gen-goql](http://github.com/tsingsun/protoc-gen-goql)
+
+微服务
+
+* 服务注册与发现: 实现了[etcd](https://github.com/coreos/etcd),留有其他组件扩展的能力
+* GRPC组件: 主要采用了[grpc-ecosystem](https://github.com/grpc-ecosystem)提供的组件
+* 系统监控: [prometheus](https://prometheus.io),可配合[grafana]()https://grafana.com)搭建监控平台
 
 本套件可以做什么
 ----------------
@@ -43,7 +50,7 @@
 
 - go环境安装
 - IDE vscode or goland
-- go的开发离开不了翻墙,具体可看[工具篇](./docs/tools.md)  
+- go的开发离开不了翻墙,具体可看[工具篇](tools.md)  
 
 快速入门
 ---------
@@ -57,20 +64,24 @@
 ### 项目结构
 
 ```
-- api                       api接口项目,基于Web Api
+- api                       api gateway接口项目,基于Web Api
     - app                   应用程序域相关组件,包含配置,日志及启动有关的处理
     - config                配置文件目录
-        - app.yaml          应用配置文件
-        - app-local.yaml    个人的环境配置文件
     - controllers           控制器文件夹
     - public                站点静态文件目录
     - routers               路由配置目录
     - schema                graphql定义文件夹
     - resolver              graphql golang解释器目录
     - loader                graphql 的dataloader目录
-    server.go               应用启动文件
+    server.go               应用服务文件
+- cmd                       程序运行及配置
+    - config
+        - app.yaml          应用配置文件
+        - app-local.yaml    个人的环境配置文件
+    main.go                 入口,具体由决定
 - schemas                   protobuf协议定义目录
 - services                  逻辑服务代码文件夹
+    - app                   RPC服务的应用程序域组件
 ```
 配置
 ---------
@@ -82,7 +93,7 @@
 * 应用配置
 ```
 appname: myApp
-httplisten: ":9097"
+listen: ":9097"
 appmode: debug
 web:
   staticdir: api/public
@@ -114,6 +125,6 @@ db:
     dsn: root:@tcp(localhost:3306)/yak
 ```
 
-基于数据库的应用在配置完后,就可以进行服务响应测试了.更多的配置内容可查看[应用程序配置](./docs/application.md)
+基于数据库的应用在配置完后,就可以进行服务响应测试了.更多的配置内容可查看[应用程序配置](application.md)
 
-[下一节 应用结构](./docs/application.md)
+[下一节 应用结构](application.md)

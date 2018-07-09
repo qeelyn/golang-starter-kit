@@ -47,6 +47,6 @@ protoc schemas/fund/fund.proto -I vendor/github.com/qeelyn/go-common -I . --goql
 ![pb-tool](http://120.77.219.247/xhguo/fund_core_cn/uploads/b65cc1b68f43c5e62ed84e58802279ca/pb-tool.png)
 ![pb-tool2](http://120.77.219.247/xhguo/fund_core_cn/uploads/d27867ce3d9bcc75ef00be29d6d1a60e/pg-tool-2.png)
 
-[上一节 首页](../README.md)    
+[上一节 首页](README.md)    
   
 [下一节 处理请求](handle-request.md)

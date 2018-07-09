@@ -1,0 +1,21 @@
+// protoc -I vendor/github.com/qeelyn/go-common -I . --goql_out=plugins=grpc,paths=source_relative:. schemas/greeter/greeter.proto
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+
+service Greeter {
+    rpc Hello (Request) returns (Response);
+}
+
+message Request {
+    string name = 1;
+}
+
+message Response {
+    string id = 1;
+    string msg = 2;
+    //@inject_tag: json:"start_date"
+    google.protobuf.Timestamp date = 3;
+
+}

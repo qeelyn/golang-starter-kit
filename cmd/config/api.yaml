@@ -1,0 +1,34 @@
+appname: fof-api
+listen: ":8000"
+appmode: release
+log:
+  file:
+    filename: ""
+    maxsize: 100
+    maxbackups: 3
+    maxage: 28
+    level: 1 #debug:-1;info:0;warning:1;error:2;DPanic:3;Panic:4;Fatal:5
+
+error-template: ""
+
+web:
+  staticdir: "public"
+
+auth:
+  auth-server: ""
+  check-access: ""
+  check-access-timeout: 1000 #microsecond
+  public-key: ""
+  router-prefix: ""
+
+opentracing:
+  sampler:
+    type: const
+    param: 1
+  reporter:
+    logSpans: false
+    localAgentHostPort: "127.0.0.1:6831"
+
+rpc:
+  pool: qeelyn://author/srv-pool #:8001
+  fof: qeelyn://author/srv-fof #:8002
