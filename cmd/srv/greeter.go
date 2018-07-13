@@ -2,7 +2,7 @@ package srv
 
 import (
 	"fmt"
-	"github.com/qeelyn/gin-contrib/ginzap"
+	"github.com/qeelyn/go-common/logger"
 	"github.com/spf13/viper"
 	jaegerconfig "github.com/uber/jaeger-client-go/config"
 	"go.uber.org/zap/zapcore"
@@ -10,6 +10,8 @@ import (
 	"context"
 	"github.com/grpc-ecosystem/go-grpc-middleware/logging/zap"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
+	"github.com/opentracing/opentracing-go"
+	"github.com/qeelyn/go-common/gormx"
 	"github.com/qeelyn/go-common/grpcx"
 	"github.com/qeelyn/go-common/grpcx/registry"
 	"github.com/qeelyn/go-common/tracing"
@@ -27,6 +29,7 @@ func RunGreeter(configPath *string, register registry.Registry) error {
 	var (
 		err    error
 		config *viper.Viper
+		tracer opentracing.Tracer
 	)
 	if config, err = apph.LoadConfig(path.Join(*configPath, "greeter.yaml")); err != nil {
 		panic(fmt.Errorf("Invalid application configuration: %s", err))
@@ -41,24 +44,27 @@ func RunGreeter(configPath *string, register registry.Registry) error {
 	defer app.Db.Close()
 
 	// create the logger
-	fl := ginzap.NewFileLogger(config.GetStringMap("log.file"))
+	fl := logger.NewFileLogger(config.GetStringMap("log.file"))
 	if app.IsDebug {
-		app.Logger = ginzap.NewLogger(fl, ginzap.NewStdLogger())
+		app.Logger = logger.NewLogger(fl, logger.NewStdLogger())
 	} else {
-		app.Logger = ginzap.NewLogger(fl)
+		app.Logger = logger.NewLogger(fl)
 	}
 	defer app.Logger.GetZap().Sync()
 
 	app.Logger.ToZapField = func(values []interface{}) []zapcore.Field {
-		return ginzap.CreateGormLog(values).ToZapFields()
+		return gormx.CreateGormLog(values).ToZapFields()
 	}
 	if !app.IsDebug {
 		app.Db.SetLogger(app.Logger)
 	}
 
-	cfg := &jaegerconfig.Configuration{}
-	config.Sub("opentracing").Unmarshal(cfg)
-	tracer := tracing.NewTracer(cfg, appName)
+	if config.IsSet("opentracing") {
+		cfg := &jaegerconfig.Configuration{}
+		config.Sub("opentracing").Unmarshal(cfg)
+		tracer = tracing.NewTracer(cfg, appName)
+
+	}
 
 	// debug enable ?
 	serverPayloadLoggingDecider := func(ctx context.Context, fullMethodName string, servingObject interface{}) bool {
@@ -74,7 +80,7 @@ func RunGreeter(configPath *string, register registry.Registry) error {
 		grpcx.WithUnaryServerInterceptor(grpc_zap.PayloadUnaryServerInterceptor(app.Logger.GetZap(), serverPayloadLoggingDecider)),
 		grpcx.WithAuthFunc(grpcx.AuthFunc(config.GetString("auth.public-key"))),
 		grpcx.WithPrometheus(config.GetString("metrics.listen")),
-		grpcx.WithRegistry(register, greeterSrvName),
+		grpcx.WithRegistry(register, greeterSrvName, config.GetString("registryListen")),
 	}
 
 	server, err := grpcx.Micro(appName, opts...)

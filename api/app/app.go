@@ -9,7 +9,7 @@ import (
 
 	"context"
 	"github.com/jinzhu/gorm"
-	"github.com/qeelyn/gin-contrib/ginzap"
+	"github.com/qeelyn/go-common/logger"
 	"github.com/qeelyn/golang-starter-kit/schemas/greeter"
 )
 
@@ -18,7 +18,7 @@ var (
 	IsDebug       bool
 	Cache         cache.Cache
 	Caches        map[string]cache.Cache
-	Logger        *ginzap.Logger
+	Logger        *logger.Logger
 	Db            *gorm.DB
 	GreeterClient greeter.GreeterClient
 )

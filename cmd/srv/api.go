@@ -7,9 +7,9 @@ import (
 	"github.com/grpc-ecosystem/go-grpc-prometheus"
 	"github.com/opentracing/opentracing-go"
 	"github.com/qeelyn/gin-contrib/errorhandle"
-	"github.com/qeelyn/gin-contrib/ginzap"
 	"github.com/qeelyn/go-common/grpcx/dialer"
 	"github.com/qeelyn/go-common/grpcx/registry"
+	"github.com/qeelyn/go-common/logger"
 	"github.com/qeelyn/go-common/tracing"
 	"github.com/qeelyn/golang-starter-kit/api/app"
 	"github.com/qeelyn/golang-starter-kit/api/router"
@@ -27,7 +27,8 @@ import (
 
 func RunApi(configPath *string, register registry.Registry) error {
 	var (
-		err error
+		err    error
+		tracer opentracing.Tracer
 	)
 	// load application configurations
 	if app.Config, err = apph.LoadConfig(path.Join(*configPath, "api.yaml")); err != nil {
@@ -39,11 +40,11 @@ func RunApi(configPath *string, register registry.Registry) error {
 
 	app.IsDebug = app.Config.GetBool("debug")
 	// create the logger
-	fl := ginzap.NewFileLogger(app.Config.GetStringMap("log.file"))
+	fl := logger.NewFileLogger(app.Config.GetStringMap("log.file"))
 	if app.IsDebug {
-		app.Logger = ginzap.NewLogger(fl, ginzap.NewStdLogger())
+		app.Logger = logger.NewLogger(fl, logger.NewStdLogger())
 	} else {
-		app.Logger = ginzap.NewLogger(fl)
+		app.Logger = logger.NewLogger(fl)
 	}
 	defer app.Logger.GetZap().Sync()
 	// cache
@@ -54,13 +55,15 @@ func RunApi(configPath *string, register registry.Registry) error {
 		}
 	}
 
-	cfg := &jaegerconfig.Configuration{}
-	app.Config.Sub("opentracing").Unmarshal(cfg)
-	tracer := tracing.NewTracer(cfg, appName)
-	if tracer != nil {
-		opentracing.InitGlobalTracer(tracer)
-	}
+	if app.Config.IsSet("opentracing") {
+		cfg := &jaegerconfig.Configuration{}
+		app.Config.Sub("opentracing").Unmarshal(cfg)
+		tracer = tracing.NewTracer(cfg, appName)
+		if tracer != nil {
+			opentracing.InitGlobalTracer(tracer)
+		}
 
+	}
 	//rpc client
 	cc := newDialer(app.Config.GetString("rpc.fof"), tracer)
 
@@ -99,9 +102,10 @@ func newDialer(serviceName string, tracer opentracing.Tracer) *grpc.ClientConn {
 }
 
 func initRouter(g *gin.Engine) {
+	g.Use(app.NewJeagerTracer())
 	if app.Config.IsSet("log.access") {
-		c := ginzap.NewFileLogger(app.Config.GetStringMap("log.access"))
-		accessLogger := ginzap.NewLogger(c)
+		c := logger.NewFileLogger(app.Config.GetStringMap("log.access"))
+		accessLogger := logger.NewLogger(c)
 		g.Use(app.AccessLogHandleFunc(accessLogger.GetZap(), time.RFC3339, false))
 	}
 	// load error messages

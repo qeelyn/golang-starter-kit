@@ -61,15 +61,6 @@
   version = "v1.2"
 
 [[projects]]
-  name = "github.com/go-log/log"
-  packages = [
-    ".",
-    "log"
-  ]
-  revision = "37e2e1f19306361e1fc152a1839f1236149cb4e4"
-  version = "v0.1.0"
-
-[[projects]]
   name = "github.com/gogo/protobuf"
   packages = [
     "gogoproto",
@@ -144,27 +135,6 @@
   version = "v1.2.0"
 
 [[projects]]
-  name = "github.com/hashicorp/consul"
-  packages = [
-    "api",
-    "watch"
-  ]
-  revision = "28141971f966e99916da2c5e461dd968746491cd"
-  version = "v1.2.0"
-
-[[projects]]
-  branch = "master"
-  name = "github.com/hashicorp/go-cleanhttp"
-  packages = ["."]
-  revision = "d5fe4b57a186c716b0e00b8c301cbd9b4182694d"
-
-[[projects]]
-  branch = "master"
-  name = "github.com/hashicorp/go-rootcerts"
-  packages = ["."]
-  revision = "6bb64b370b90e7ef1fa532be9e591a81c3493e00"
-
-[[projects]]
   branch = "master"
   name = "github.com/hashicorp/hcl"
   packages = [
@@ -180,12 +150,6 @@
     "json/token"
   ]
   revision = "ef8a98b0bbce4a65b5aa4c368430a80ddc533168"
-
-[[projects]]
-  name = "github.com/hashicorp/serf"
-  packages = ["coordinate"]
-  revision = "d6574a5bb1226678d7010325fb6c985db20ee458"
-  version = "v0.8.1"
 
 [[projects]]
   name = "github.com/jinzhu/gorm"
@@ -232,69 +196,6 @@
 
 [[projects]]
   branch = "master"
-  name = "github.com/micro/go-log"
-  packages = ["."]
-  revision = "cbfa9447f9b655f8e66583237e51f40ca9bff860"
-
-[[projects]]
-  name = "github.com/micro/go-micro"
-  packages = [
-    "broker",
-    "broker/codec",
-    "broker/codec/json",
-    "client",
-    "codec",
-    "codec/jsonrpc",
-    "codec/protorpc",
-    "errors",
-    "metadata",
-    "registry",
-    "selector",
-    "server",
-    "server/debug",
-    "server/debug/proto",
-    "transport",
-    "transport/codec"
-  ]
-  revision = "5372707d0ec1ebd736bec36818ddb2e700606589"
-  version = "v0.9.0"
-
-[[projects]]
-  branch = "master"
-  name = "github.com/micro/go-rcache"
-  packages = ["."]
-  revision = "a581a57b513351792b9f21fc8b95d87b1c5a95da"
-
-[[projects]]
-  name = "github.com/micro/protoc-gen-micro"
-  packages = ["examples/greeter"]
-  revision = "656f330b069fe6ea1ce5013282e5914d6a1c3719"
-  version = "v0.4.0"
-
-[[projects]]
-  branch = "master"
-  name = "github.com/micro/util"
-  packages = [
-    "go/lib/addr",
-    "go/lib/net",
-    "go/lib/tls"
-  ]
-  revision = "4b7ed83e8520ab8fe6e5ef61fa2ede94b32f8602"
-
-[[projects]]
-  branch = "master"
-  name = "github.com/mitchellh/go-homedir"
-  packages = ["."]
-  revision = "3864e76763d94a6df2f9960b16a20a33da9f9a66"
-
-[[projects]]
-  branch = "master"
-  name = "github.com/mitchellh/hashstructure"
-  packages = ["."]
-  revision = "2bca23e0e452137f789efbc8610126fd8b94f73b"
-
-[[projects]]
-  branch = "master"
   name = "github.com/mitchellh/mapstructure"
   packages = ["."]
   revision = "bb74f1db0675b241733089d5a1faa5dd8b0ef57b"
@@ -314,12 +215,6 @@
   packages = ["."]
   revision = "a3647f8e31d79543b2d0f0ae2fe5c379d72cedc0"
   version = "v2.1.0"
-
-[[projects]]
-  name = "github.com/pborman/uuid"
-  packages = ["."]
-  revision = "e790cca94e6cc75c7064b1332e63811d4aae1a53"
-  version = "v1.1"
 
 [[projects]]
   name = "github.com/pelletier/go-toml"
@@ -375,9 +270,9 @@
   packages = [
     "auth",
     "errorhandle",
-    "ginzap"
+    "tracing"
   ]
-  revision = "550747460ad768c17784970b37fb6a18c9b0f3f2"
+  revision = "78e93a6803dcafc20285cc037ab7b99a6cc651b4"
 
 [[projects]]
   branch = "master"
@@ -390,15 +285,19 @@
     "cache/local",
     "cache/memcache",
     "errors",
+    "gormx",
     "grpcx",
     "grpcx/dialer",
     "grpcx/registry",
     "grpcx/registry/etcdv3",
+    "logger",
     "protobuf/paginate",
     "protobuf/request",
+    "protobuf/timestamp",
+    "protobuf/wrappers",
     "tracing"
   ]
-  revision = "d0783124b3088f3ffaedfd75ffbade53a547e69f"
+  revision = "8a78d801e73467e15b416769d5bc3b54a88393f3"
 
 [[projects]]
   name = "github.com/spf13/afero"
@@ -622,6 +521,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "78c6a0fb36bf2489cfd75692b543f0863886c23287c4408c432cc2f5fcc59b78"
+  inputs-digest = "1cd260e645bbbc06591c2f72a0633ce26581f8e62121af1517b6208c27244317"
   solver-name = "gps-cdcl"
   solver-version = 1

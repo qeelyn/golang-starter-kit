@@ -3,7 +3,7 @@ package apph
 import (
 	"fmt"
 	"github.com/jinzhu/gorm"
-	"github.com/qeelyn/gin-contrib/ginzap"
+	"github.com/qeelyn/go-common/logger"
 	"github.com/spf13/viper"
 	_ "gopkg.in/yaml.v2"
 	"os"
@@ -75,7 +75,7 @@ func NewDb(config map[string]interface{}) *gorm.DB {
 	return orm
 }
 
-func NewLogger(config map[string]interface{}) *ginzap.Logger {
-	file := ginzap.NewFileLogger(config)
-	return ginzap.NewLogger(file)
+func NewLogger(config map[string]interface{}) *logger.Logger {
+	file := logger.NewFileLogger(config)
+	return logger.NewLogger(file)
 }

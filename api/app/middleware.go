@@ -9,6 +9,7 @@ import (
 	"github.com/gin-gonic/gin/binding"
 	"github.com/pkg/errors"
 	"github.com/qeelyn/gin-contrib/auth"
+	"github.com/qeelyn/gin-contrib/tracing"
 	errors2 "github.com/qeelyn/golang-starter-kit/api/errors"
 	"go.uber.org/zap"
 	"io"
@@ -23,6 +24,7 @@ var (
 	CheckAccessMiddleware *auth.CheckAccess
 	checkAccessUrl        string
 	checkAccessTimeout    int
+	JeagerTracer          *tracing.JeagerTracer
 )
 
 // Ginzap returns a gin.HandlerFunc (middleware) that logs requests using uber-go/zap.
@@ -67,6 +69,7 @@ func AccessLogHandleFunc(logger *zap.Logger, timeFormat string, utc bool) gin.Ha
 			zap.String("user-agent", c.Request.UserAgent()),
 			zap.String("time", end.Format(timeFormat)),
 			zap.Duration("latency", latency),
+			tracing.TracingField(c, logger),
 		)
 	}
 }
@@ -178,4 +181,9 @@ func CheckAccess(ctx context.Context, permission string, params map[string]inter
 		err = errors.New(http.StatusText(code))
 	}
 	return err == nil, err
+}
+
+func NewJeagerTracer() gin.HandlerFunc {
+	JeagerTracer = &tracing.JeagerTracer{}
+	return JeagerTracer.Handle()
 }

@@ -1,5 +1,6 @@
 appname: srv-fof
 listen: ":8002"
+registryListen: ":8002"
 appmode: release
 log:
   file:

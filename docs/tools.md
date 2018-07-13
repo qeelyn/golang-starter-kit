@@ -1,5 +1,10 @@
 ### 翻墙
 
+目前套件使用翻墙的主要原因为依赖golang.org的包.而golang.org是被墙的.
+
+* 在配合DEP指定忽略被墙的包(需要手动放入GOPATH中)可不使用翻墙,
+但发现在使用GOPATH的包时编译速度下降,建议有条件翻墙就上.
+
 * 使用带有http proxy,如shadowsocks(mac),因为如果使用全局模式时,在socks模式下会被站点墙
    
    1. 设置好terminal: 

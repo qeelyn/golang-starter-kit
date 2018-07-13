@@ -6,7 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/graph-gophers/graphql-go"
 	"github.com/qeelyn/gin-contrib/auth"
-	"github.com/qeelyn/gin-contrib/ginzap"
+	"github.com/qeelyn/go-common/logger"
 	"github.com/qeelyn/golang-starter-kit/api/app"
 	"github.com/qeelyn/golang-starter-kit/api/errors"
 	"github.com/qeelyn/golang-starter-kit/api/loader"
@@ -47,10 +47,10 @@ func ServeGraphqlResource(r *gin.RouterGroup) {
 }
 
 type graphqlLoggerAdapter struct {
-	logger *ginzap.Logger
+	logger *logger.Logger
 }
 
-func NewGraphqlLogger(l *ginzap.Logger) *graphqlLoggerAdapter {
+func NewGraphqlLogger(l *logger.Logger) *graphqlLoggerAdapter {
 	return &graphqlLoggerAdapter{
 		logger: l,
 	}
