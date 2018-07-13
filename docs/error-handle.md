@@ -33,8 +33,31 @@ INTERNAL_SERVER_ERROR 对应error的消息文本,通过消息文本的全等匹�
 ```
 最终ErrorHandle将error转化为code,message响应输出
 > 涉及到gin的作用范围
+
 ### RPC
 
-TODO
+延用GRPC框架的异常处理.
+
+### 异常跟踪
+
+如果采用了OperatingTracer中间件时,会在Context中保存TracerID,来做为整个请求链的全局ID
+```
+// gin 
+g *gin.Engine
+g.Use(app.NewJeagerTracer())
+
+// grpc client
+cc, err := dialer.Dial(serviceName,		
+	dialer.WithTracer(tracer),
+)
+
+// grpc server 初始化option时加入
+var opts = []grpcx.Option{
+    grpcx.WithTracer(tracer),
+}
+server, err := grpcx.Micro(appName, opts...)
+```
+访问日志及GRPC日志将会产生相应的key记录: "trace.traceid":"1fa3ff926212922"
+同时tracerid可用于JeagerUI查询对应的operationtracer记录.
 
 [下一节 日志](application-log.md)

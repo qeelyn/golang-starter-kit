@@ -29,22 +29,22 @@ log:
     maxage: 28
     level: 0
 ```
-目前的日志主要还是采用文件日志,后续再考虑结合其他Logstash这样的,一劳永逸.
+目前的日志主要还是采用文件日志,后续再考虑结合其他方式,如Logstash
 
-日志只是app包中的一部分,根据需求自行更改显示的格式
+在api的访问日志中采用了zap记录,可根据需求自行更改显示的格式
 ```
-logger.Info(path,
-			zap.Int("status", c.Writer.Status()),
-			zap.String("method", c.Request.Method),
-			zap.String("path", path),
-			zap.String("query", query),
-			zap.ByteString("body", bodyCopy.Bytes()),
-			zap.String("ip", c.ClientIP()),
-			zap.String("auth", c.GetString("userId")),
-			zap.String("user-agent", c.Request.UserAgent()),
-			zap.String("time", end.Format(timeFormat)),
-			zap.Duration("latency", latency),
-		)
+    logger.Info(path,
+        zap.Int("status", c.Writer.Status()),
+        zap.String("method", c.Request.Method),
+        zap.String("path", path),
+        zap.String("query", query),
+        zap.ByteString("body", bodyCopy.Bytes()),
+        zap.String("ip", c.ClientIP()),
+        zap.String("auth", c.GetString("userId")),
+        zap.String("user-agent", c.Request.UserAgent()),
+        zap.String("time", end.Format(timeFormat)),
+        zap.Duration("latency", latency),
+    )
 ```
 
 [下一节 Service](service-layer.md)
