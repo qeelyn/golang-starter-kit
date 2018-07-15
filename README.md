@@ -125,6 +125,6 @@ db:
     dsn: root:@tcp(localhost:3306)/yak
 ```
 
-基于数据库的应用在配置完后,就可以进行服务响应测试了.更多的配置内容可查看[应用程序配置](application.md)
+基于数据库的应用在配置完后,就可以进行服务响应测试了.更多的配置内容可查看[应用程序配置](./docs/application.md)
 
-[下一节 应用结构](application.md)
+[下一节 应用结构](./docs/application.md)
