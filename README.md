@@ -50,7 +50,7 @@
 
 - go环境安装
 - IDE vscode or goland
-- go的开发离开不了翻墙,具体可看[工具篇](tools.md)  
+- go的开发离开不了翻墙,具体可看[工具篇](./docs/tools.md)  
 
 快速入门
 ---------
