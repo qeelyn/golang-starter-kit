@@ -40,12 +40,7 @@ protoc schemas/fund/fund.proto -I vendor/github.com/qeelyn/go-common -I . --goql
 
 ### IDE支持
 
-在IDE插件中，使用外部的定义时，可以配置导入相关的定义，如下图：
-![pb-import](http://120.77.219.247/xhguo/fund_core_cn/uploads/3a6f08e3db4f6730d6d757dda97e2722/pb-import.png)
-
-在Goland中，可以通过protobuf的插件来支持，在外部工具中配置编译器，如下图：
-![pb-tool](http://120.77.219.247/xhguo/fund_core_cn/uploads/b65cc1b68f43c5e62ed84e58802279ca/pb-tool.png)
-![pb-tool2](http://120.77.219.247/xhguo/fund_core_cn/uploads/d27867ce3d9bcc75ef00be29d6d1a60e/pg-tool-2.png)
+* goland 可以配置外部工具,直接右键菜单就可以生成代码.
 
 [上一节 首页](README.md)    
   

@@ -297,7 +297,7 @@
     "protobuf/wrappers",
     "tracing"
   ]
-  revision = "8a78d801e73467e15b416769d5bc3b54a88393f3"
+  revision = "138714773466d421c7c00e7665a397fe732827b1"
 
 [[projects]]
   name = "github.com/spf13/afero"
@@ -521,6 +521,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "1cd260e645bbbc06591c2f72a0633ce26581f8e62121af1517b6208c27244317"
+  inputs-digest = "ff0a969db5732efd4261613d9adaf78375e0d563f5d447097ef97824b23e3196"
   solver-name = "gps-cdcl"
   solver-version = 1

@@ -7,13 +7,13 @@ import (
 	"github.com/grpc-ecosystem/go-grpc-prometheus"
 	"github.com/opentracing/opentracing-go"
 	"github.com/qeelyn/gin-contrib/errorhandle"
+	"github.com/qeelyn/go-common/config"
 	"github.com/qeelyn/go-common/grpcx/dialer"
 	"github.com/qeelyn/go-common/grpcx/registry"
 	"github.com/qeelyn/go-common/logger"
 	"github.com/qeelyn/go-common/tracing"
 	"github.com/qeelyn/golang-starter-kit/api/app"
 	"github.com/qeelyn/golang-starter-kit/api/router"
-	"github.com/qeelyn/golang-starter-kit/helper/apph"
 	"github.com/qeelyn/golang-starter-kit/schemas/greeter"
 	jaegerconfig "github.com/uber/jaeger-client-go/config"
 	"google.golang.org/grpc"
@@ -31,7 +31,7 @@ func RunApi(configPath *string, register registry.Registry) error {
 		tracer opentracing.Tracer
 	)
 	// load application configurations
-	if app.Config, err = apph.LoadConfig(path.Join(*configPath, "api.yaml")); err != nil {
+	if app.Config, err = config.LoadConfig(path.Join(*configPath, "api.yaml")); err != nil {
 		return err
 	}
 
