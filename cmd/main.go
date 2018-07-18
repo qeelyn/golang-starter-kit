@@ -28,12 +28,12 @@ func usage() {
 	fmt.Fprintf(os.Stderr, "\n")
 	fmt.Fprintf(os.Stderr, "Services\n")
 	fmt.Fprintf(os.Stderr, "  all          Boots all services\n")
-	fmt.Fprintf(os.Stderr, "  api          api gateway\n")
-	fmt.Fprintf(os.Stderr, "  gteeter      greeter service\n")
+	fmt.Fprintf(os.Stderr, "  gateway      Api gateway\n")
+	fmt.Fprintf(os.Stderr, "  gteeter      Greeter service\n")
 	fmt.Fprintf(os.Stderr, "Options\n")
-	fmt.Fprintf(os.Stderr, "  -c			  config file path\n")
-	fmt.Fprintf(os.Stderr, "  -n			  service discovery address\n")
-	fmt.Fprintf(os.Stderr, "  -m			  http listen for prometheus monitor\n")
+	fmt.Fprintf(os.Stderr, "  -c			  Config file path\n")
+	fmt.Fprintf(os.Stderr, "  -n			  Service discovery address\n")
+	fmt.Fprintf(os.Stderr, "  -m			  Http listen for prometheus monitor\n")
 	fmt.Fprintf(os.Stderr, "\n")
 }
 
@@ -49,7 +49,7 @@ func main() {
 	switch cmd := strings.ToLower(os.Args[len(os.Args)-1]); cmd {
 	case "all":
 		run = srv.RunAll
-	case "api":
+	case "gateway":
 		run = srv.RunGateway
 	case "greeter":
 		run = srv.RunGreeter
