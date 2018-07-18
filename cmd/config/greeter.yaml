@@ -1,16 +1,16 @@
-appname: srv-fof
-listen: ":8002"
-registryListen: ":8002"
+appname: srv-greeter
+listen: ":8001"
+registryListen: ":8001"
 appmode: release
 log:
   file:
-    filename: ""
+    filename: runtime/greeter.log
     maxsize: 100
     maxbackups: 3
     maxage: 28
     level: 1 #debug:-1;info:0;warning:1;error:2;DPanic:3;Panic:4;Fatal:5
 
-error-template: ""
+error-template: config/errors.zh.yaml
 
 db:
   default:
@@ -21,7 +21,7 @@ auth:
   auth-server: ""
   check-access: ""
   check-access-timeout: 1000 #microsecond
-  public-key: ""
+  public-key: config/rsa_pub.pem
   router-prefix: ""
 
 opentracing:

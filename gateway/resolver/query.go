@@ -2,7 +2,7 @@ package resolver
 
 import (
 	"context"
-	"github.com/qeelyn/golang-starter-kit/api/app"
+	"github.com/qeelyn/golang-starter-kit/gateway/app"
 	"github.com/qeelyn/golang-starter-kit/schemas/greeter"
 )
 

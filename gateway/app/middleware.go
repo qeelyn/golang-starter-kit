@@ -10,7 +10,7 @@ import (
 	"github.com/pkg/errors"
 	"github.com/qeelyn/gin-contrib/auth"
 	"github.com/qeelyn/gin-contrib/tracing"
-	errors2 "github.com/qeelyn/golang-starter-kit/api/errors"
+	errors2 "github.com/qeelyn/golang-starter-kit/gateway/errors"
 	"go.uber.org/zap"
 	"io"
 	"io/ioutil"

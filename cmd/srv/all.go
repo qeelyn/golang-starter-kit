@@ -4,5 +4,5 @@ import "github.com/qeelyn/go-common/grpcx/registry"
 
 func RunAll(configPath *string, register registry.Registry) error {
 	go RunGreeter(configPath, register)
-	return RunApi(configPath, register)
+	return RunGateway(configPath, register)
 }

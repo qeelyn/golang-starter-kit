@@ -284,6 +284,7 @@
     "cache/internal/util",
     "cache/local",
     "cache/memcache",
+    "config",
     "errors",
     "gormx",
     "grpcx",
@@ -297,7 +298,7 @@
     "protobuf/wrappers",
     "tracing"
   ]
-  revision = "138714773466d421c7c00e7665a397fe732827b1"
+  revision = "65a10cfbdf718402ec208e758b08ead5dbb4894e"
 
 [[projects]]
   name = "github.com/spf13/afero"
@@ -521,6 +522,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "ff0a969db5732efd4261613d9adaf78375e0d563f5d447097ef97824b23e3196"
+  inputs-digest = "be46b0a56c5bc75372fcbfa3d2a1d17405dd3846ede14ae8854cfca8d93934af"
   solver-name = "gps-cdcl"
   solver-version = 1

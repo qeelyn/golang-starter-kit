@@ -2,10 +2,14 @@ package greetersrv
 
 import (
 	"context"
+	"github.com/jinzhu/gorm"
+	"github.com/qeelyn/go-common/logger"
 	"github.com/qeelyn/golang-starter-kit/schemas/greeter"
 )
 
 type greeterService struct {
+	Db     *gorm.DB
+	Logger *logger.Logger
 }
 
 func NewGreeterService() *greeterService {

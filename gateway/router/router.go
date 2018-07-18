@@ -2,8 +2,8 @@ package routers
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/qeelyn/golang-starter-kit/api/app"
-	"github.com/qeelyn/golang-starter-kit/api/handle"
+	"github.com/qeelyn/golang-starter-kit/gateway/app"
+	"github.com/qeelyn/golang-starter-kit/gateway/handle"
 	"net/http"
 	"path"
 	"path/filepath"

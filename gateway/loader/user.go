@@ -7,7 +7,7 @@ import (
 	"github.com/graph-gophers/dataloader"
 	"github.com/graph-gophers/graphql-go"
 	"github.com/pkg/errors"
-	"github.com/qeelyn/golang-starter-kit/api/app"
+	"github.com/qeelyn/golang-starter-kit/gateway/app"
 	"github.com/qeelyn/golang-starter-kit/helper/relay"
 	"io/ioutil"
 	"net/http"

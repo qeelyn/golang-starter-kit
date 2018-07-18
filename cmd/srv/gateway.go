@@ -12,8 +12,8 @@ import (
 	"github.com/qeelyn/go-common/grpcx/registry"
 	"github.com/qeelyn/go-common/logger"
 	"github.com/qeelyn/go-common/tracing"
-	"github.com/qeelyn/golang-starter-kit/api/app"
-	"github.com/qeelyn/golang-starter-kit/api/router"
+	"github.com/qeelyn/golang-starter-kit/gateway/app"
+	"github.com/qeelyn/golang-starter-kit/gateway/router"
 	"github.com/qeelyn/golang-starter-kit/schemas/greeter"
 	jaegerconfig "github.com/uber/jaeger-client-go/config"
 	"google.golang.org/grpc"
@@ -25,13 +25,13 @@ import (
 	"time"
 )
 
-func RunApi(configPath *string, register registry.Registry) error {
+func RunGateway(configPath *string, register registry.Registry) error {
 	var (
 		err    error
 		tracer opentracing.Tracer
 	)
 	// load application configurations
-	if app.Config, err = config.LoadConfig(path.Join(*configPath, "api.yaml")); err != nil {
+	if app.Config, err = config.LoadConfig(path.Join(*configPath, "gateway.yaml")); err != nil {
 		return err
 	}
 
@@ -65,7 +65,7 @@ func RunApi(configPath *string, register registry.Registry) error {
 
 	}
 	//rpc client
-	cc := newDialer(app.Config.GetString("rpc.fof"), tracer)
+	cc := newDialer(app.Config.GetString("rpc.greeter"), tracer)
 
 	app.GreeterClient = greeter.NewGreeterClient(cc)
 

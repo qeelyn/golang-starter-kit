@@ -30,3 +30,9 @@ dep ensure 同步包
 ```
     dep init -gopath -v -no-examples                
 ```    
+
+### Build
+
+本套件默认的编译路径为cmd,所有的配置也是针对该路径的.请在开发时调整一下IDE配置
+* goland
+![img](./img/goland-build.jpg)

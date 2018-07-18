@@ -6,7 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/graph-gophers/dataloader"
 	"github.com/qeelyn/go-common/cache"
-	"github.com/qeelyn/golang-starter-kit/api/app"
+	"github.com/qeelyn/golang-starter-kit/gateway/app"
 	"time"
 )
 

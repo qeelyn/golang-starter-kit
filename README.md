@@ -64,7 +64,7 @@
 ### 项目结构
 
 ```
-- api                       api gateway接口项目,基于Web Api
+- gateway                   api gateway接口项目,基于Web http server
     - app                   应用程序域相关组件,包含配置,日志及启动有关的处理
     - config                配置文件目录
     - controllers           控制器文件夹
@@ -78,10 +78,12 @@
     - config
         - app.yaml          应用配置文件
         - app-local.yaml    个人的环境配置文件
+    - srv                   服务目录,主要针对Server的初始化
+        - gateway
     main.go                 入口,具体由决定
 - schemas                   protobuf协议定义目录
 - services                  逻辑服务代码文件夹
-    - app                   RPC服务的应用程序域组件
+    - greeter.go            RPC服务的Service文件,包括应用程序域组件
 ```
 配置
 ---------
@@ -96,7 +98,7 @@ appname: myApp
 listen: ":9097"
 appmode: debug
 web:
-  staticdir: api/public
+  staticdir: public
   
 ```
 

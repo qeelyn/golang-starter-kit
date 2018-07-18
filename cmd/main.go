@@ -50,7 +50,7 @@ func main() {
 	case "all":
 		run = srv.RunAll
 	case "api":
-		run = srv.RunApi
+		run = srv.RunGateway
 	case "greeter":
 		run = srv.RunGreeter
 	default:
