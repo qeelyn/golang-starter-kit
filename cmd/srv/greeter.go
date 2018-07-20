@@ -99,7 +99,7 @@ func RunGreeter(configPath *string, register registry.Registry) error {
 	}
 
 	rpc := server.BuildGrpcServer()
-	greeter.RegisterGreeterServer(rpc, greetersrv.NewGreeterService())
+	greeter.RegisterGreeterServer(rpc, service)
 	if err = server.Run(rpc, listen); err != nil {
 		return fmt.Errorf("Server run error:", err)
 	}
