@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"path"
 	"path/filepath"
-	"runtime"
 )
 
 func DefaultRouter() *gin.Engine {
@@ -32,14 +31,11 @@ func DefaultRouter() *gin.Engine {
 	router.Static("/public", staticdir)
 
 	router.GET("/", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "index.html", gin.H{
-			"product":   "fundsrv-core",
-			"goVersion": runtime.Version(),
-		})
+		c.AbortWithStatus(http.StatusNoContent)
 	})
 
 	router.NoRoute(func(c *gin.Context) {
-		c.HTML(404, "404.html", gin.H{})
+		c.AbortWithStatus(http.StatusNotFound)
 	})
 
 	return router

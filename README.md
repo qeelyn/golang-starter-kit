@@ -24,7 +24,7 @@
 * 配置文件: [viper](http://github.com/spf13/viper)
 * 日志: [Uber Zap](http://go.uber.org/zap)
 * graphql: [gopher-graphql](github.com/graph-gophers/graphql-go)
-* 依赖管理: [DEP](https://golang.github.io/dep/docs/introduction.html)
+* 依赖管理: [DEP](https://golang.github.io/dep/docs/introduction.html) 将被[vgo](https://github.com/golang/vgo)取代
 * 基础套件:[qeelyn-common](http://github.com/qeelyn/go-common)
   - 缓存 cache 内置支持local,redis,memcached
   - protobuf工具包
@@ -32,11 +32,12 @@
 * 中间件与组件: [qeelyn-contrib](http://github.com/qeelyn/gin-contrib)
 * protoc生成工具扩展: [protoc-gen-goql](http://github.com/tsingsun/protoc-gen-goql)
 
-微服务
+微服务部分
 
 * 服务注册与发现: 实现了[etcd](https://github.com/coreos/etcd),留有其他组件扩展的能力
 * GRPC组件: 主要采用了[grpc-ecosystem](https://github.com/grpc-ecosystem)提供的组件
 * 系统监控: [prometheus](https://prometheus.io),可配合[grafana]()https://grafana.com)搭建监控平台
+* 极方面的通过Docker构建部署.可通过[基于jenkins的持续构建](./docs/subject-jenkins.md)进一部了解
 
 本套件可以做什么
 ----------------
@@ -50,7 +51,7 @@
 
 - go环境安装
 - IDE vscode or goland
-- go的开发离开不了翻墙,具体可看[工具篇](./docs/tools.md)  
+- 以前go的开发离开不了翻墙,现在可以不翻了,具体可看[工具篇](./docs/tools.md)  
 
 快速入门
 ---------
@@ -76,8 +77,8 @@
     server.go               应用服务文件
 - cmd                       程序运行及配置
     - config
-        - app.yaml          应用配置文件
-        - app-local.yaml    个人的环境配置文件
+        - gateway.yaml          应用配置文件
+        - gateway-local.yaml    个人的环境配置文件
     - srv                   服务目录,主要针对Server的初始化
         - gateway
     main.go                 入口,具体由决定

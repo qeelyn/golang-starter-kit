@@ -3,7 +3,7 @@ listen: ":8000"
 appmode: release
 log:
   file:
-    filename: runtime/api.log
+    filename: runtime/gateway.log
     maxsize: 100
     maxbackups: 3
     maxage: 28

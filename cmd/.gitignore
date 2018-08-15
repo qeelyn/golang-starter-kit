@@ -1,5 +1,6 @@
 # Created by .ignore support plugin (hsz.mobi)
-config/*-local.yaml
-config/*.pem
+/config/*-local.yaml
+/config/*.pem
 /runtime
-advisorq-fof
+/public
+/serve
