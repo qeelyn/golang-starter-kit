@@ -34,8 +34,19 @@ appmode: debug
 * [metrics](application-metrics.md) 系统运行指标监控
 
 ### 远程配置
-Kit默认以本地文件加载配置文件,如果启用远程配置时,需要与注册中心配合,也就是注册+配置中心是一起启用的.
+Kit默认以本地文件加载配置文件,如果启用远程配置时,注册中心与配置中心依赖服务是一致的,这时将同时启动服务注册与发现.
 
+* 代码
+```
+	cnfOpts := config.ParseOptions(configOptions...)
+	//采用etcd 客户端v3版本
+	etcdv3.Build(cnfOpts)
+	
+	cnfOpts.FileName = "gateway.yaml"
+	if app.Config, err = config.LoadConfig(&cnfOpts); err != nil {
+    		return err
+    }
+```
 * 启动参数
 ```
 {cmd} -c {配置路径} -n {etcd addr}
