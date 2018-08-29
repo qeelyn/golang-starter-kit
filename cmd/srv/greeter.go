@@ -2,6 +2,7 @@ package srv
 
 import (
 	"fmt"
+	"github.com/qeelyn/go-common/config/options"
 	"github.com/qeelyn/go-common/logger"
 	"github.com/spf13/viper"
 	jaegerconfig "github.com/uber/jaeger-client-go/config"
@@ -19,12 +20,11 @@ import (
 	"github.com/qeelyn/go-common/tracing"
 	"github.com/qeelyn/golang-starter-kit/schemas/greeter"
 	"github.com/qeelyn/golang-starter-kit/services/greetersrv"
-	"path"
 )
 
 const greeterSrvName = "srv-greeter"
 
-func RunGreeter(configPath *string, register registry.Registry) error {
+func RunGreeter(cnfOpts options.Options, register registry.Registry) error {
 
 	var (
 		err    error
@@ -33,7 +33,9 @@ func RunGreeter(configPath *string, register registry.Registry) error {
 		db     *gorm.DB
 		dlog   *logger.Logger
 	)
-	if cnf, err = config.LoadConfig(path.Join(*configPath, "greeter.yaml")); err != nil {
+	cnfOpts.FileName = "greeter.yaml"
+
+	if cnf, err = config.LoadConfig(&cnfOpts); err != nil {
 		panic(fmt.Errorf("Invalid application configuration: %s", err))
 	}
 

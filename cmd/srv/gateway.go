@@ -8,6 +8,7 @@ import (
 	"github.com/opentracing/opentracing-go"
 	"github.com/qeelyn/gin-contrib/errorhandle"
 	"github.com/qeelyn/go-common/config"
+	"github.com/qeelyn/go-common/config/options"
 	"github.com/qeelyn/go-common/grpcx/dialer"
 	"github.com/qeelyn/go-common/grpcx/registry"
 	"github.com/qeelyn/go-common/logger"
@@ -21,17 +22,17 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
-	"path"
 	"time"
 )
 
-func RunGateway(configPath *string, register registry.Registry) error {
+func RunGateway(cnfOpts options.Options, register registry.Registry) error {
 	var (
 		err    error
 		tracer opentracing.Tracer
 	)
+	cnfOpts.FileName = "gateway.yaml"
 	// load application configurations
-	if app.Config, err = config.LoadConfig(path.Join(*configPath, "gateway.yaml")); err != nil {
+	if app.Config, err = config.LoadConfig(&cnfOpts); err != nil {
 		return err
 	}
 

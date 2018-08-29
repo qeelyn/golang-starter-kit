@@ -1,4 +1,4 @@
-appname: fof-api
+appname: gst-gateway
 listen: ":8000"
 appmode: release
 log:

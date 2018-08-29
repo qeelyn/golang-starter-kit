@@ -1,8 +1,11 @@
 package srv
 
-import "github.com/qeelyn/go-common/grpcx/registry"
+import (
+	"github.com/qeelyn/go-common/config/options"
+	"github.com/qeelyn/go-common/grpcx/registry"
+)
 
-func RunAll(configPath *string, register registry.Registry) error {
-	go RunGreeter(configPath, register)
-	return RunGateway(configPath, register)
+func RunAll(cnfOpts options.Options, register registry.Registry) error {
+	go RunGreeter(cnfOpts, register)
+	return RunGateway(cnfOpts, register)
 }

@@ -3,7 +3,11 @@
 
 应用
 --------
-应用可定义为单一服务程序的管理主体,每个服务程序只能包含一个应用主体,应用主体是通过app包进行访问
+应用可定义为单一服务程序的管理主体,每个服务程序只能包含一个应用主体,应用主体是通过app包进行访问.
+
+应用配置以文件形式展现,并支持远程配置.
+
+为了便于在开发环境的个性化,支持本地配置文件(以-local为后缀的形式),并避免敏感信息的泄露.
 
 ### 应用主体配置
 如下所示,应用主体的配置目前还比较简单
@@ -28,5 +32,24 @@ appmode: debug
 * [授权](auth.md)
 * [OpenTracing](application-opentracing.md) 分布式跟踪
 * [metrics](application-metrics.md) 系统运行指标监控
+
+### 远程配置
+Kit默认以本地文件加载配置文件,如果启用远程配置时,需要与注册中心配合,也就是注册+配置中心是一起启用的.
+
+* 启动参数
+```
+{cmd} -c {配置路径} -n {etcd addr}
+配置路径为uri : golang-start-kit/config 格式的基路径,
+etcd addr: 需要用host:port形式,如127.0.0.1:2379
+例如启动gateway时,最终对应到etcd的配置路径为 : 127.0.0.1:2379/golang-start-kit/config/gateway.yaml,
+所以往配置中心发布时,需要注意key取值
+```
+
+* 发布配置
+
+命令行方式可以用如下命令,自己可以结合一些开源的etcd管理工具或者自动开发,实现配置的管理
+```
+cat cmd/config/gateway.yaml | etcdctl put golang-start-kit/config/gateway.yaml
+```
 
 [下一节 模型定义-protobuf](use-protobuf.md)
