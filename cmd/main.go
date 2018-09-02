@@ -15,7 +15,6 @@ import (
 	"net/http"
 	"os"
 	"strings"
-	"time"
 )
 
 var (
@@ -74,15 +73,14 @@ func main() {
 
 	if *namingAddr != "" {
 		register, err = registry.DefaultRegistry(
-			registry.Addrs(*namingAddr),
-			registry.Timeout(30*time.Second),
+			registry.Dsn(*namingAddr),
 		)
 
 		if err != nil {
 			panic(err)
 		}
 		resolver.Register(register.(resolver.Builder))
-		configOptions = append(configOptions, config.Addrs(*namingAddr))
+		configOptions = append(configOptions, config.Registry(register))
 	}
 	if *monitorListen != "" {
 		go func() {
@@ -96,7 +94,10 @@ func main() {
 	}
 
 	cnfOpts := config.ParseOptions(configOptions...)
-	etcdv3.Build(cnfOpts)
+	if register != nil {
+		// TODO 只支持了etcd3
+		etcdv3.Build(cnfOpts)
+	}
 
 	if err := run(*cnfOpts, register); err != nil {
 		fmt.Fprintf(os.Stderr, "%v\n", err)

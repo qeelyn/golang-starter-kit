@@ -1,6 +1,6 @@
 appname: srv-greeter
-listen: ":8001"
-registryListen: ":8001"
+listen: ":18001"
+registryListen: ":18001"
 appmode: release
 log:
   file:

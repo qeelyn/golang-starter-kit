@@ -99,6 +99,8 @@ github.com/qeelyn/go-common v0.0.0-20180717161004-65a10cfbdf71 h1:GngW8nmTE8TUcd
 github.com/qeelyn/go-common v0.0.0-20180717161004-65a10cfbdf71/go.mod h1:CUkwNd6P/AJKTdje7nboH1ybEZfCMZ42iLiIKIlzdos=
 github.com/qeelyn/go-common v0.0.0-20180829020756-387d0c20df18 h1:4ZZIjL5CNEDH2Z8geRK/5RjCLNZec8yr5RqUjVB0ZkU=
 github.com/qeelyn/go-common v0.0.0-20180829020756-387d0c20df18/go.mod h1:CmjWa21/qtqaPX91lJBGb7YbGkpDvrj5zvwCJpXX2xU=
+github.com/qeelyn/go-common v0.0.0-20180902142852-e11e813d743e h1:A0YHBNXVQMuLSUOI4AjhUVi8gBgFCfBYEyIR6TacujA=
+github.com/qeelyn/go-common v0.0.0-20180902142852-e11e813d743e/go.mod h1:CmjWa21/qtqaPX91lJBGb7YbGkpDvrj5zvwCJpXX2xU=
 github.com/qeelyn/graphql-go v0.0.0-20180604122119-0b810f691a45 h1:/QM2eEZXjE62c5Zr6z7i51kD29aD8DjldSKOg7DOer0=
 github.com/qeelyn/graphql-go v0.0.0-20180604122119-0b810f691a45/go.mod h1:eJ875H0VDw7pIb9avwzP7KZxgR39ZxAetINiDXaEXuo=
 github.com/spf13/afero v1.1.1 h1:Lt3ihYMlE+lreX1GS4Qw4ZsNpYQLxIXKBTEOXm3nt6I=

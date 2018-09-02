@@ -49,13 +49,13 @@ Kit默认以本地文件加载配置文件,如果启用远程配置时,注册中
 ```
 * 启动参数
 ```
-{cmd} -c {配置路径} -n {etcd addr}
+{cmd} -c {配置路径} -n {etcd connection string}
 配置路径为uri : golang-start-kit/config 格式的基路径,
-etcd addr: 需要用host:port形式,如127.0.0.1:2379
+etcd connection string: 需要用host:port?key=value形式,如127.0.0.1:2379?username=qeelyn
 例如启动gateway时,最终对应到etcd的配置路径为 : 127.0.0.1:2379/golang-start-kit/config/gateway.yaml,
 所以往配置中心发布时,需要注意key取值
 ```
-
+> etcd的连接串是根据etcd config的配置,当启用TLS时,需要定制初始化
 * 发布配置
 
 命令行方式可以用如下命令,自己可以结合一些开源的etcd管理工具或者自动开发,实现配置的管理
