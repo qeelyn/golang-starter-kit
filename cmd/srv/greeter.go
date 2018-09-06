@@ -89,9 +89,14 @@ func RunGreeter(cnfOpts options.Options, register registry.Registry) error {
 		grpcx.WithTracer(tracer),
 		grpcx.WithLogger(service.Logger.GetZap()),
 		grpcx.WithUnaryServerInterceptor(grpc_zap.PayloadUnaryServerInterceptor(service.Logger.GetZap(), serverPayloadLoggingDecider)),
-		grpcx.WithAuthFunc(grpcx.AuthFunc(cnf.GetString("auth.public-key"))),
 		grpcx.WithPrometheus(cnf.GetString("metrics.listen")),
 		grpcx.WithRegistry(register, greeterSrvName, cnf.GetString("registryListen")),
+	}
+	if cnf.IsSet("jwt.public-key") {
+		if err := config.ResetFromSource(cnf, "jwt.public-key"); err != nil {
+			panic(err)
+		}
+		opts = append(opts, grpcx.WithAuthFunc(grpcx.JwtAuthFunc(cnf.GetStringMap("jwt"))))
 	}
 
 	server, err := grpcx.Micro(appName, opts...)

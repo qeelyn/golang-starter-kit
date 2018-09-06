@@ -37,11 +37,10 @@ func ServeGraphqlResource(r *gin.RouterGroup) {
 	//tracer := graphql.Tracer(opentracing.GlobalTracer())
 	graphqlSchema := graphql.MustParseSchema(schema.GetRootSchema(), &resolver.Resolver{})
 	graphql.Logger(NewGraphqlLogger(app.Logger))
-	checkAccess := app.NewCheckAccess(app.Config.GetStringMap("auth"))
 	h := &GraphQL{
 		Schema:      graphqlSchema,
 		Loaders:     loader.NewLoaderCollection(),
-		CheckAccess: checkAccess,
+		CheckAccess: app.CheckAccessMiddleware,
 	}
 	r.POST("query", h.Query)
 }

@@ -95,12 +95,16 @@ github.com/prometheus/procfs v0.0.0-20180629160828-40f013a808ec h1:BOusaKf/rx0mS
 github.com/prometheus/procfs v0.0.0-20180629160828-40f013a808ec/go.mod h1:c3At6R/oaqEKCNdg8wHV1ftS6bRYblBhIjjI8uT2IGk=
 github.com/qeelyn/gin-contrib v0.0.0-20180713070920-78e93a6803dc h1:JvzTzAtCRyxjJixNviTyrvlpyKYcqr1sUsH89Rt6BNw=
 github.com/qeelyn/gin-contrib v0.0.0-20180713070920-78e93a6803dc/go.mod h1:IvKfjroGUadYICvoEARafMAyhvnDDpLHhvdH94VN5Ew=
+github.com/qeelyn/gin-contrib v0.0.0-20180904014143-6a53a0ca1424 h1:ZCnvLdqUfFLcqx7WhQ/4d7G/qX2AnvwOUDG8d4gygpo=
+github.com/qeelyn/gin-contrib v0.0.0-20180904014143-6a53a0ca1424/go.mod h1:IvKfjroGUadYICvoEARafMAyhvnDDpLHhvdH94VN5Ew=
 github.com/qeelyn/go-common v0.0.0-20180717161004-65a10cfbdf71 h1:GngW8nmTE8TUcd6veNnyF28OrU4otd8h54aD5nJ8iT8=
 github.com/qeelyn/go-common v0.0.0-20180717161004-65a10cfbdf71/go.mod h1:CUkwNd6P/AJKTdje7nboH1ybEZfCMZ42iLiIKIlzdos=
 github.com/qeelyn/go-common v0.0.0-20180829020756-387d0c20df18 h1:4ZZIjL5CNEDH2Z8geRK/5RjCLNZec8yr5RqUjVB0ZkU=
 github.com/qeelyn/go-common v0.0.0-20180829020756-387d0c20df18/go.mod h1:CmjWa21/qtqaPX91lJBGb7YbGkpDvrj5zvwCJpXX2xU=
 github.com/qeelyn/go-common v0.0.0-20180902142852-e11e813d743e h1:A0YHBNXVQMuLSUOI4AjhUVi8gBgFCfBYEyIR6TacujA=
 github.com/qeelyn/go-common v0.0.0-20180902142852-e11e813d743e/go.mod h1:CmjWa21/qtqaPX91lJBGb7YbGkpDvrj5zvwCJpXX2xU=
+github.com/qeelyn/go-common v0.0.0-20180906094559-a142cbe145e0 h1:Ac6z3yWWrlYNTjKLJm1YxyoXqFJXL/O/YjDcsE/62bo=
+github.com/qeelyn/go-common v0.0.0-20180906094559-a142cbe145e0/go.mod h1:CmjWa21/qtqaPX91lJBGb7YbGkpDvrj5zvwCJpXX2xU=
 github.com/qeelyn/graphql-go v0.0.0-20180604122119-0b810f691a45 h1:/QM2eEZXjE62c5Zr6z7i51kD29aD8DjldSKOg7DOer0=
 github.com/qeelyn/graphql-go v0.0.0-20180604122119-0b810f691a45/go.mod h1:eJ875H0VDw7pIb9avwzP7KZxgR39ZxAetINiDXaEXuo=
 github.com/spf13/afero v1.1.1 h1:Lt3ihYMlE+lreX1GS4Qw4ZsNpYQLxIXKBTEOXm3nt6I=

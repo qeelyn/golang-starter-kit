@@ -17,12 +17,6 @@ import (
 	"strings"
 )
 
-var (
-	configPath    = flag.String("c", "config", "app config path")
-	namingAddr    = flag.String("n", "", "service register and discovery server address")
-	monitorListen = flag.String("m", "", "http listen for prometheus monitor")
-)
-
 func usage() {
 	fmt.Fprintf(os.Stderr, "golang start kit services\n")
 	fmt.Fprintf(os.Stderr, "USAGE\n")
@@ -33,23 +27,33 @@ func usage() {
 	fmt.Fprintf(os.Stderr, "  gateway      Api gateway\n")
 	fmt.Fprintf(os.Stderr, "  gteeter      Greeter service\n")
 	fmt.Fprintf(os.Stderr, "Flags\n")
-	fmt.Fprintf(os.Stderr, "  -c			  Config file path\n")
+	fmt.Fprintf(os.Stderr, "  -c			  Config file path,default is using local path at './config'\n")
 	fmt.Fprintf(os.Stderr, "  -n			  Service discovery address\n")
 	fmt.Fprintf(os.Stderr, "  -m			  Http listen for prometheus monitor\n")
 	fmt.Fprintf(os.Stderr, "\n")
 }
 
+const LocalConfigPath = "./config"
+
 func main() {
-
-	flag.CommandLine.Parse(os.Args[2:])
-	configOptions := []options.Option{config.Path(*configPath)}
-
-	var run func(options.Options, registry.Registry) error
-
+	var (
+		configPath         = flag.String("c", "config", "app config path")
+		namingAddr         = flag.String("n", "", "service register and discovery server address")
+		monitorListen      = flag.String("m", "", "http listen for prometheus monitor")
+		useLocalConfigPath = false
+	)
 	if len(os.Args) < 2 {
 		usage()
 		os.Exit(1)
 	}
+	flag.CommandLine.Parse(os.Args[2:])
+
+	configOptions := []options.Option{config.Path(*configPath)}
+	if *configPath == LocalConfigPath {
+		useLocalConfigPath = true
+	}
+
+	var run func(options.Options, registry.Registry) error
 
 	switch cmd := strings.ToLower(os.Args[1]); cmd {
 	case "all":
@@ -80,7 +84,9 @@ func main() {
 			panic(err)
 		}
 		resolver.Register(register.(resolver.Builder))
-		configOptions = append(configOptions, config.Registry(register))
+		if !useLocalConfigPath {
+			configOptions = append(configOptions, config.Registry(register))
+		}
 	}
 	if *monitorListen != "" {
 		go func() {
@@ -94,7 +100,7 @@ func main() {
 	}
 
 	cnfOpts := config.ParseOptions(configOptions...)
-	if register != nil {
+	if register != nil && !useLocalConfigPath {
 		// TODO 只支持了etcd3
 		etcdv3.Build(cnfOpts)
 	}

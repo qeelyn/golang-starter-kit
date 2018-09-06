@@ -117,10 +117,17 @@ func initRouter(g *gin.Engine) {
 		}, app.Logger))
 	}
 
-	authConfig := app.Config.GetStringMap("auth")
+	pubKeyKey := "jwt.public-key"
+	if app.Config.IsSet(pubKeyKey) {
+		if err := config.ResetFromSource(app.Config, pubKeyKey); err != nil {
+			panic(err)
+		}
+	}
+	authConfig := app.Config.GetStringMap("jwt")
 	//init middleware
-	app.AuthHandleFunc(authConfig)
-	app.CheckAccessHandleFunc(authConfig)
+	app.AuthMiddleware = app.NewAuthMiddleware(authConfig)
+	// check access
+	app.CheckAccessMiddleware = app.NewCheckAccessMiddleware(app.Config.GetStringMap("auth"))
 
 	routers.SetupRouterGroup(g)
 	routers.SetGraphQlRouterGroup(g)

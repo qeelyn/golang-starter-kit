@@ -1,6 +1,6 @@
 FROM alpine:latest
 
-ENV TIMEZONE=Asia/Shanghai SRVNAME=gateway
+ENV TIMEZONE=Asia/Shanghai HOSTIP=0.0.0.0
 RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories && \
     apk update && \
     apk --no-cache add ca-certificates tzdata && \
@@ -16,5 +16,4 @@ WORKDIR /app
 COPY cmd/serve .
 COPY cmd/config ./config
 COPY cmd/public ./public
-#CMD ./serve $SRVNAME
-ENTRYPOINT ["/bin/sh", "-c","./serve $SRVNAME"]
+CMD ./serve all

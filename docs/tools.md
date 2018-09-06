@@ -35,7 +35,7 @@ dep ensure 同步包
 
 可以将被墙的包通过go.mod文件的replace方式替换,竟味着可以直接指向github.
 如果github也被墙,可以通过gitee导入github的项目,然后将包指向gitee,这样就可以达到不用翻墙开发了
-> 通过gitee访问github,非常之快
+> 通过gitee访问github,非常之快.目前为止,github又为抽疯了..请忽略gitee的包
 ```
 replace (
 	github.com/bradfitz/gomemcache => gitee.com/githubmirror/gomemcache v0.0.0-20180710155616-bc664df96737
@@ -52,6 +52,8 @@ replace (
 	google.golang.org/grpc => gitee.com/githubmirror/grpc-go v1.14.0
 )
 ```
+
+> 现发现vgo的问题为,加载不出非go文件目录.对于protobuf需要外部protobuf文件编译会产生问题,请自行COPY
 
 ### Build
 

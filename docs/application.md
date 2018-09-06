@@ -33,6 +33,13 @@ appmode: debug
 * [OpenTracing](application-opentracing.md) 分布式跟踪
 * [metrics](application-metrics.md) 系统运行指标监控
 
+### 本地配置
+
+默认采用./config路径为应用配置路径,应用对应的配置文件已经在程序中指定完成.
+当应用的配置文件为`gateway.yaml`时,将默认加载后缀为`-local`的配置文件`gateway-local.yaml`
+
+需要注意当通过`-c`参数变更路径时,将与配置中心进行组合获取配置文件
+
 ### 远程配置
 Kit默认以本地文件加载配置文件,如果启用远程配置时,注册中心与配置中心依赖服务是一致的,这时将同时启动服务注册与发现.
 

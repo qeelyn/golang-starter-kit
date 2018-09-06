@@ -15,6 +15,7 @@ import (
 	"io"
 	"io/ioutil"
 	"net/http"
+	"path"
 	"strings"
 	"time"
 )
@@ -75,11 +76,22 @@ func AccessLogHandleFunc(logger *zap.Logger, timeFormat string, utc bool) gin.Ha
 }
 
 // auth will check the jwt token basically
-func AuthHandleFunc(config map[string]interface{}) gin.HandlerFunc {
+func NewAuthMiddleware(config map[string]interface{}) *auth.GinJWTMiddleware {
 	// the jwt middleware
-	AuthMiddleware = &auth.GinJWTMiddleware{
-		Realm:      "auth server",
-		PubKeyFile: config["public-key"].(string),
+	pKey, _ := config["public-key"].([]byte)
+	eKey, _ := config["encryption-key"].(string)
+	algo, _ := config["algorithm"].(string)
+	if strings.HasPrefix(algo, "RS") && (pKey == nil) {
+		panic("miss pubKeyFile or priKeyFile setting when in RS signing algorithm")
+	}
+	if strings.HasPrefix(algo, "HS") && eKey == "" {
+		panic("miss encryption-key setting when in HS signing algorithm")
+	}
+	middle := &auth.GinJWTMiddleware{
+		Realm:            "auth server",
+		PubKeyFile:       pKey,
+		Key:              []byte(eKey),
+		SigningAlgorithm: config["algorithm"].(string), //RS256
 		UnauthorizedHandle: func(c *gin.Context, code int, message string) bool {
 			if IsDebug && c.GetHeader("Authorization") == "" {
 				if tid, ok := config["testuserid"]; ok {
@@ -105,27 +117,22 @@ func AuthHandleFunc(config map[string]interface{}) gin.HandlerFunc {
 		TokenLookup:   "header:Authorization",
 		TokenHeadName: "Bearer",
 	}
-	return AuthMiddleware.Handle()
+	return middle
 
-}
-
-func CheckAccessHandleFunc(config map[string]interface{}) gin.HandlerFunc {
-	CheckAccessMiddleware = NewCheckAccess(config)
-	return CheckAccessMiddleware.CheckAccessHandle()
 }
 
 // userId will be exist after bearer auth middleware execute
-func NewCheckAccess(config map[string]interface{}) *auth.CheckAccess {
-	checkAccessUrl = config["check-access"].(string)
+func NewCheckAccessMiddleware(config map[string]interface{}) *auth.CheckAccess {
+	checkAccessUrl = path.Join(config["auth-server"].(string), config["check-access"].(string))
 	routerPrefix := config["router-prefix"].(string)
 	checkAccessTimeout = config["check-access-timeout"].(int)
 	instance := &auth.CheckAccess{
 		GetPermissionFunc: func(context *gin.Context) string {
-			path := context.Request.URL.Path
-			if strings.HasPrefix(path, routerPrefix) {
-				return path[len(routerPrefix):]
+			reqPath := context.Request.URL.Path
+			if strings.HasPrefix(reqPath, routerPrefix) {
+				return reqPath[len(routerPrefix):]
 			} else {
-				return path
+				return reqPath
 			}
 		},
 		CheckFunc: func(context *http.Request, userId string, permission string, params map[string]interface{}) int {

@@ -26,4 +26,8 @@ build-window:
 clean:
 	rm -f cmd/$(BUILD_NAME)
 	rm -rf cmd/public
+	rm -rf cmd/runtime/*.*
 
+.PHONY: docker
+docker: clean build
+	docker build -t golang-starter-kit .
