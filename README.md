@@ -62,6 +62,12 @@
   git clone https://github.com/qeelyn/golang-starter-kit.git $GOPATH/src/xxx.com/your-vendor/project-name
 ```
 
+### 运行
+```
+  make run    
+```
+看到启用界面时,通过浏览器访问: `http://localhost:18000/graphiql`,这时你看到graphiql都正常时.项目成功运行
+
 项目目录
 ----------
 ### 项目结构

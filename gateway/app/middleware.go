@@ -21,11 +21,11 @@ import (
 )
 
 var (
-	AuthMiddleware        *auth.GinJWTMiddleware
+	AuthHanlerFunc        gin.HandlerFunc
 	CheckAccessMiddleware *auth.CheckAccess
 	checkAccessUrl        string
 	checkAccessTimeout    int
-	JeagerTracer          *tracing.JeagerTracer
+	TracerFunc            gin.HandlerFunc
 )
 
 // Ginzap returns a gin.HandlerFunc (middleware) that logs requests using uber-go/zap.
@@ -37,7 +37,7 @@ func AccessLogHandleFunc(logger *zap.Logger, timeFormat string, utc bool) gin.Ha
 	return func(c *gin.Context) {
 		start := time.Now()
 		// some evil middlewares modify this values
-		path := c.Request.URL.Path
+		reqPath := c.Request.URL.Path
 		query := c.Request.URL.RawQuery
 		bodyCopy := &bytes.Buffer{}
 		if c.Request.Method == "POST" {
@@ -59,10 +59,10 @@ func AccessLogHandleFunc(logger *zap.Logger, timeFormat string, utc bool) gin.Ha
 			end = end.UTC()
 		}
 
-		logger.Info(path,
+		logger.Info(reqPath,
 			zap.Int("status", c.Writer.Status()),
 			zap.String("method", c.Request.Method),
-			zap.String("path", path),
+			zap.String("reqPath", reqPath),
 			zap.String("query", query),
 			zap.ByteString("body", bodyCopy.Bytes()),
 			zap.String("ip", c.ClientIP()),
@@ -188,9 +188,4 @@ func CheckAccess(ctx context.Context, permission string, params map[string]inter
 		err = errors.New(http.StatusText(code))
 	}
 	return err == nil, err
-}
-
-func NewJeagerTracer() gin.HandlerFunc {
-	JeagerTracer = &tracing.JeagerTracer{}
-	return JeagerTracer.Handle()
 }

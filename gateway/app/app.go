@@ -39,9 +39,6 @@ func NewCache(cnf map[string]interface{}) error {
 			}
 		}
 	}
-	if Cache == nil {
-		panic("initial cache failure,miss default cache")
-	}
 	if len(Caches) == 0 {
 		panic("initial cache failure,please check the config")
 	}

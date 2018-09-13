@@ -1,7 +1,7 @@
 appname: srv-greeter
 listen: ":18001"
 registryListen: ":18001"
-appmode: release
+appmode: prod
 log:
   file:
     filename: runtime/greeter.log
@@ -12,12 +12,13 @@ log:
 
 error-template: config/errors.zh.yaml
 
-db:
-  default:
-    dialect: postgres
-    dsn: host=host port=5432 user= dbname=advisorq_mtdb password= sslmode=disable
+#db:
+#  default:
+#    dialect: mysql
+#    dsn: root:@tcp(localhost:3306)/yak
 
 jwt:
+  enable: false
   public-key: "" # pem file if use rs algorithm
   encryption-key: "abcderf"
   algorithm: "HS256"
@@ -28,13 +29,16 @@ auth:
   check-access-timeout: 1000 #microsecond
   router-prefix: ""
 
-opentracing:
-  sampler:
-    type: const
-    param: 1
-  reporter:
-    logSpans: false
-    localAgentHostPort: "127.0.0.1:6831"
+#opentracing:
+#  sampler:
+#    type: const
+#    param: 1
+#  reporter:
+#    logSpans: false
+#    localAgentHostPort: "127.0.0.1:6831"
+#  headers:
+#    TraceContextHeaderName: trace.traceid
+
 
 metrics:
   backend: prometheus

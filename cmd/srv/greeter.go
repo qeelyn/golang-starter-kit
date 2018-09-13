@@ -25,7 +25,6 @@ import (
 const greeterSrvName = "srv-greeter"
 
 func RunGreeter(cnfOpts options.Options, register registry.Registry) error {
-
 	var (
 		err    error
 		cnf    *viper.Viper
@@ -43,13 +42,6 @@ func RunGreeter(cnfOpts options.Options, register registry.Registry) error {
 	listen := cnf.GetString("listen")
 
 	isDebug := cnf.GetBool("debug")
-	db, err = gormx.NewDb(cnf.GetStringMap("db.default"))
-	if err != nil {
-		panic(err)
-	}
-	db.LogMode(isDebug)
-	defer db.Close()
-
 	// create the logger
 	fl := logger.NewFileLogger(cnf.GetStringMap("log.file"))
 	if isDebug {
@@ -62,15 +54,27 @@ func RunGreeter(cnfOpts options.Options, register registry.Registry) error {
 	dlog.ToZapField = func(values []interface{}) []zapcore.Field {
 		return gormx.CreateGormLog(values).ToZapFields()
 	}
-	if !isDebug {
-		db.SetLogger(dlog)
-	}
+	//db
+	if cnf.IsSet("db") {
+		db, err = gormx.NewDb(cnf.GetStringMap("db.default"))
+		if err != nil {
+			panic(err)
+		}
+		db.LogMode(isDebug)
+		defer db.Close()
 
+		if !isDebug {
+			db.SetLogger(dlog)
+		}
+	}
+	//opentracing
 	if cnf.IsSet("opentracing") {
 		cfg := &jaegerconfig.Configuration{}
 		cnf.Sub("opentracing").Unmarshal(cfg)
 		tracer = tracing.NewTracer(cfg, appName)
-
+		if tracer != nil {
+			opentracing.InitGlobalTracer(tracer)
+		}
 	}
 
 	// debug enable ?
@@ -92,17 +96,18 @@ func RunGreeter(cnfOpts options.Options, register registry.Registry) error {
 		grpcx.WithPrometheus(cnf.GetString("metrics.listen")),
 		grpcx.WithRegistry(register, greeterSrvName, cnf.GetString("registryListen")),
 	}
-	if cnf.IsSet("jwt.public-key") {
-		if err := config.ResetFromSource(cnf, "jwt.public-key"); err != nil {
-			panic(err)
+	if cnf.GetBool("jwt.enable") {
+		if cnf.IsSet("jwt.public-key") {
+			if err := config.ResetFromSource(cnf, "jwt.public-key"); err != nil {
+				panic(err)
+			}
 		}
 		opts = append(opts, grpcx.WithAuthFunc(grpcx.JwtAuthFunc(cnf.GetStringMap("jwt"))))
 	}
-
 	server, err := grpcx.Micro(appName, opts...)
 
 	if err != nil {
-		panic(fmt.Errorf("fof server start error:%s", err))
+		panic(fmt.Errorf(greeterSrvName+" error:%s", err))
 	}
 
 	rpc := server.BuildGrpcServer()

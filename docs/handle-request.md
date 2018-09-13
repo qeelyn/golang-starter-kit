@@ -57,4 +57,9 @@ gin.Html
 gin框架的作用范围在路由及handle方法,gin.context的显式调用就结束,此时上下文会转化为context.Context接口或其封装往下传递.如service层或者graphql服务中传递,不推荐再将context转化为gin.context.
 > 实际上将context转化为gin.context这也是很困难的,封装的层级是未知的.
 
+### 请求ID
+
+为了方便跟踪及日志,默认启用了traceid记录.支持opentracing与自定义ID,当启用opentracing时.则采用TraceID.
+这时,你会在日志中看到trace.traceid的字段.
+
 [下一节 异常处理](error-handle.md)

@@ -11,10 +11,15 @@ log:
 
 error-template: config/errors.zh.yaml
 
+cache:
+  dataloader:
+    type: local
+
 web:
   staticdir: "public"
 
 jwt:
+  enable: false
   public-key: "" # pem file if use rs algorithm
   encryption-key: "abcderf"
   algorithm: "HS256"
@@ -25,13 +30,15 @@ auth:
   check-access-timeout: 1000 #microsecond
   router-prefix: ""
 
-opentracing:
-  sampler:
-    type: const
-    param: 1
-  reporter:
-    logSpans: false
-    localAgentHostPort: "127.0.0.1:6831"
+#opentracing:
+#  sampler:
+#    type: const
+#    param: 1
+#  reporter:
+#    logSpans: false
+#    localAgentHostPort: "127.0.0.1:6831"
+#  headers:
+#    TraceContextHeaderName: trace.traceid
 
 rpc:
-  greeter: :8001 # if use etcd ,the rpc connection will be: qeelyn://author/srv-greeter
+  greeter: :18001 # if use etcd ,the rpc connection will be: qeelyn://author/srv-greeter

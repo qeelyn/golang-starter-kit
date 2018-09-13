@@ -43,11 +43,13 @@ func DefaultRouter() *gin.Engine {
 
 func SetupRouterGroup(router *gin.Engine) *gin.RouterGroup {
 	v1 := router.Group("/v1")
-	v1.Use(app.AuthMiddleware.Handle())
-	v1.Use(app.CheckAccessMiddleware.CheckAccessHandle())
-	{
-		/*** calendar ***/
+	if app.AuthHanlerFunc != nil {
+		v1.Use(app.AuthHanlerFunc)
 	}
+	if app.CheckAccessMiddleware != nil {
+		v1.Use(app.CheckAccessMiddleware.CheckAccessHandle())
+	}
+	//TODO add router
 	return v1
 }
 
@@ -57,18 +59,22 @@ func SetGraphQlRouterGroup(router *gin.Engine) *gin.RouterGroup {
 			c.HTML(http.StatusOK, "graphiql.html", nil)
 		})
 	} else {
+		handles := make([]gin.HandlerFunc, 0)
+		if app.AuthHanlerFunc != nil {
+			handles = append(handles, app.AuthHanlerFunc)
+		}
+		handles = append(handles, func(c *gin.Context) {
+			c.HTML(http.StatusOK, "graphiql.html", nil)
+		})
 		router.GET("/graphiql",
-			app.AuthMiddleware.Handle(),
-			func(c *gin.Context) {
-				c.HTML(http.StatusOK, "graphiql.html", nil)
-			},
+			handles...,
 		)
 	}
 
 	v2 := router.Group("/v2")
-	v2.Use(app.AuthMiddleware.Handle())
-	{
-		handle.ServeGraphqlResource(v2)
+	if app.AuthHanlerFunc != nil {
+		v2.Use(app.AuthHanlerFunc)
 	}
+	handle.ServeGraphqlResource(v2)
 	return v2
 }

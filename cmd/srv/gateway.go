@@ -7,6 +7,7 @@ import (
 	"github.com/grpc-ecosystem/go-grpc-prometheus"
 	"github.com/opentracing/opentracing-go"
 	"github.com/qeelyn/gin-contrib/errorhandle"
+	ginTracing "github.com/qeelyn/gin-contrib/tracing"
 	"github.com/qeelyn/go-common/config"
 	"github.com/qeelyn/go-common/config/options"
 	"github.com/qeelyn/go-common/grpcx/dialer"
@@ -48,11 +49,14 @@ func RunGateway(cnfOpts options.Options, register registry.Registry) error {
 		app.Logger = logger.NewLogger(fl)
 	}
 	defer app.Logger.GetZap().Sync()
-	// cache
-	cacheConfig := app.Config.GetStringMap("cache")
-	if cacheConfig != nil {
-		if err := app.NewCache(cacheConfig); err != nil {
-			return err
+
+	if app.Config.IsSet("cache") {
+		// cache
+		cacheConfig := app.Config.GetStringMap("cache")
+		if cacheConfig != nil {
+			if err := app.NewCache(cacheConfig); err != nil {
+				return err
+			}
 		}
 	}
 
@@ -63,8 +67,10 @@ func RunGateway(cnfOpts options.Options, register registry.Registry) error {
 		if tracer != nil {
 			opentracing.InitGlobalTracer(tracer)
 		}
-
 	}
+	tracerCnf := map[string]interface{}{"useOpentracing": app.Config.IsSet("opentracing")}
+	app.TracerFunc = ginTracing.TracingHandleFunc(tracerCnf)
+
 	//rpc client
 	cc := newDialer(app.Config.GetString("rpc.greeter"), tracer)
 
@@ -103,7 +109,7 @@ func newDialer(serviceName string, tracer opentracing.Tracer) *grpc.ClientConn {
 }
 
 func initRouter(g *gin.Engine) {
-	g.Use(app.NewJeagerTracer())
+	g.Use(app.TracerFunc)
 	if app.Config.IsSet("log.access") {
 		c := logger.NewFileLogger(app.Config.GetStringMap("log.access"))
 		accessLogger := logger.NewLogger(c)
@@ -117,17 +123,21 @@ func initRouter(g *gin.Engine) {
 		}, app.Logger))
 	}
 
-	pubKeyKey := "jwt.public-key"
-	if app.Config.IsSet(pubKeyKey) {
-		if err := config.ResetFromSource(app.Config, pubKeyKey); err != nil {
-			panic(err)
+	if app.Config.GetBool("jwt.enable") {
+		pubKeyKey := "jwt.public-key"
+		if app.Config.IsSet(pubKeyKey) {
+			if err := config.ResetFromSource(app.Config, pubKeyKey); err != nil {
+				panic(err)
+			}
 		}
+		authConfig := app.Config.GetStringMap("jwt")
+		//init middleware
+		app.AuthHanlerFunc = app.NewAuthMiddleware(authConfig).Handle()
 	}
-	authConfig := app.Config.GetStringMap("jwt")
-	//init middleware
-	app.AuthMiddleware = app.NewAuthMiddleware(authConfig)
 	// check access
-	app.CheckAccessMiddleware = app.NewCheckAccessMiddleware(app.Config.GetStringMap("auth"))
+	if app.Config.IsSet("auth") {
+		app.CheckAccessMiddleware = app.NewCheckAccessMiddleware(app.Config.GetStringMap("auth"))
+	}
 
 	routers.SetupRouterGroup(g)
 	routers.SetGraphQlRouterGroup(g)
@@ -136,7 +146,7 @@ func initRouter(g *gin.Engine) {
 func graceful(srv *http.Server) error {
 	go func() {
 		// service connections
-		log.Println("Server is ready for listening at:", srv.Addr)
+		log.Println("http Server is ready for listening at:", srv.Addr)
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			log.Fatalf("listen: %s\n", err)
 		}

@@ -3,8 +3,7 @@ module github.com/qeelyn/golang-starter-kit
 require (
 	github.com/bradfitz/gomemcache v0.0.0-20180627213657-7886924cd2b3 // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
-	github.com/gin-contrib/sse v0.0.0-20170109093832-22d885f9ecc7 // indirect
-	github.com/gin-gonic/gin v0.0.0-20170702092826-d459835d2b07
+	github.com/gin-gonic/gin v1.3.0
 	github.com/golang/protobuf v1.1.0
 	github.com/graph-gophers/dataloader v0.0.0-20180104184831-78139374585c
 	github.com/graph-gophers/graphql-go v0.0.0-20180604122119-0b810f691a45
@@ -12,21 +11,19 @@ require (
 	github.com/grpc-ecosystem/go-grpc-prometheus v1.2.0
 	github.com/jinzhu/gorm v1.9.1
 	github.com/lib/pq v0.0.0-20180523175426-90697d60dd84 // indirect
-	github.com/mattn/go-isatty v0.0.3 // indirect
 	github.com/opentracing/opentracing-go v1.0.2
 	github.com/patrickmn/go-cache v2.1.0+incompatible
 	github.com/pkg/errors v0.8.0
 	github.com/prometheus/client_golang v0.8.0
 	github.com/prometheus/procfs v0.0.0-20180629160828-40f013a808ec // indirect
-	github.com/qeelyn/gin-contrib v0.0.0-20180904014143-6a53a0ca1424
-	github.com/qeelyn/go-common v0.0.0-20180906094559-a142cbe145e0
+	github.com/qeelyn/gin-contrib v0.0.0-20180913102713-0db5f862405c
+	github.com/qeelyn/go-common v0.0.0-20180913030542-6794f306cb24
 	github.com/spf13/viper v1.1.0
 	github.com/uber/jaeger-client-go v2.14.0+incompatible
 	github.com/vmihailenco/msgpack v3.3.3+incompatible // indirect
-	go.uber.org/zap v1.8.0
+	go.uber.org/zap v1.9.1
 	golang.org/x/net v0.0.0-20180811021610-c39426892332
 	google.golang.org/grpc v1.14.0
-	gopkg.in/go-playground/validator.v8 v8.18.2 // indirect
 	gopkg.in/vmihailenco/msgpack.v3 v3.3.3 // indirect
 )
 

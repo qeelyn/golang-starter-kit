@@ -4,7 +4,7 @@ GO=$(shell which go)
 
 .PHONY: dep
 dep:
-	dep ensure
+	vgo mod vendor
 
 .PHONY: test
 test:
@@ -16,6 +16,8 @@ build: pre-build build-linux
 pre-build:
 	cp -rf gateway/public cmd/
 
+build-default:
+	$(GO) build -o cmd/$(BUILD_NAME) cmd/main.go
 build-linux:
 	GOOS=linux GOARCH=amd64 $(GO) build -o cmd/$(BUILD_NAME) cmd/main.go
 
@@ -30,4 +32,9 @@ clean:
 
 .PHONY: docker
 docker: clean build
-	docker build -t golang-starter-kit .
+	docker build -t sms-std-api .
+
+.PHONY: run
+run: pre-build build-default
+	cd cmd && ./serve all
+
