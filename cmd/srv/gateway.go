@@ -13,11 +13,9 @@ import (
 	"github.com/qeelyn/go-common/grpcx/dialer"
 	"github.com/qeelyn/go-common/grpcx/registry"
 	"github.com/qeelyn/go-common/logger"
-	"github.com/qeelyn/go-common/tracing"
 	"github.com/qeelyn/golang-starter-kit/gateway/app"
 	"github.com/qeelyn/golang-starter-kit/gateway/router"
 	"github.com/qeelyn/golang-starter-kit/schemas/greeter"
-	jaegerconfig "github.com/uber/jaeger-client-go/config"
 	"google.golang.org/grpc"
 	"log"
 	"net/http"
@@ -39,41 +37,23 @@ func RunGateway(cnfOpts options.Options, register registry.Registry) error {
 
 	appName := app.Config.GetString("appname")
 	listen := app.Config.GetString("listen")
-
 	app.IsDebug = app.Config.GetBool("debug")
 	// create the logger
-	fl := logger.NewFileLogger(app.Config.GetStringMap("log.file"))
-	if app.IsDebug {
-		app.Logger = logger.NewLogger(fl, logger.NewStdLogger())
-	} else {
-		app.Logger = logger.NewLogger(fl)
-	}
+	app.Logger = newLogger(app.Config)
 	defer app.Logger.GetZap().Sync()
 
 	if app.Config.IsSet("cache") {
-		// cache
-		cacheConfig := app.Config.GetStringMap("cache")
-		if cacheConfig != nil {
-			if err := app.NewCache(cacheConfig); err != nil {
-				return err
-			}
+		if app.Caches, err = newBatchCache(app.Config.GetStringMap("cache")); err != nil {
+			panic(err)
 		}
 	}
-
-	if app.Config.IsSet("opentracing") {
-		cfg := &jaegerconfig.Configuration{}
-		app.Config.Sub("opentracing").Unmarshal(cfg)
-		tracer = tracing.NewTracer(cfg, appName)
-		if tracer != nil {
-			opentracing.InitGlobalTracer(tracer)
-		}
-	}
+	//tracing
+	tracer = newTracing(app.Config, appName)
 	tracerCnf := map[string]interface{}{"useOpentracing": app.Config.IsSet("opentracing")}
 	app.TracerFunc = ginTracing.TracingHandleFunc(tracerCnf)
 
 	//rpc client
 	cc := newDialer(app.Config.GetString("rpc.greeter"), tracer)
-
 	app.GreeterClient = greeter.NewGreeterClient(cc)
 
 	router := routers.DefaultRouter()

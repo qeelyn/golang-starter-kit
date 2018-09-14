@@ -5,7 +5,6 @@ import (
 	"github.com/qeelyn/go-common/config/options"
 	"github.com/qeelyn/go-common/logger"
 	"github.com/spf13/viper"
-	jaegerconfig "github.com/uber/jaeger-client-go/config"
 	"go.uber.org/zap/zapcore"
 
 	"context"
@@ -17,7 +16,6 @@ import (
 	"github.com/qeelyn/go-common/gormx"
 	"github.com/qeelyn/go-common/grpcx"
 	"github.com/qeelyn/go-common/grpcx/registry"
-	"github.com/qeelyn/go-common/tracing"
 	"github.com/qeelyn/golang-starter-kit/schemas/greeter"
 	"github.com/qeelyn/golang-starter-kit/services/greetersrv"
 )
@@ -38,17 +36,9 @@ func RunGreeter(cnfOpts options.Options, register registry.Registry) error {
 		panic(fmt.Errorf("Invalid application configuration: %s", err))
 	}
 
-	appName := cnf.GetString("appname")
-	listen := cnf.GetString("listen")
-
-	isDebug := cnf.GetBool("debug")
+	appName, listen, isDebug := cnf.GetString("appname"), cnf.GetString("listen"), cnf.GetBool("debug")
 	// create the logger
-	fl := logger.NewFileLogger(cnf.GetStringMap("log.file"))
-	if isDebug {
-		dlog = logger.NewLogger(fl, logger.NewStdLogger())
-	} else {
-		dlog = logger.NewLogger(fl)
-	}
+	dlog = newLogger(cnf)
 	defer dlog.GetZap().Sync()
 
 	dlog.ToZapField = func(values []interface{}) []zapcore.Field {
@@ -68,20 +58,10 @@ func RunGreeter(cnfOpts options.Options, register registry.Registry) error {
 		}
 	}
 	//opentracing
-	if cnf.IsSet("opentracing") {
-		cfg := &jaegerconfig.Configuration{}
-		cnf.Sub("opentracing").Unmarshal(cfg)
-		tracer = tracing.NewTracer(cfg, appName)
-		if tracer != nil {
-			opentracing.InitGlobalTracer(tracer)
-		}
-	}
+	tracer = newTracing(cnf, appName)
 
 	// debug enable ?
 	serverPayloadLoggingDecider := func(ctx context.Context, fullMethodName string, servingObject interface{}) bool {
-		if fullMethodName == "healthcheck" {
-			return false
-		}
 		return isDebug
 	}
 
@@ -96,14 +76,7 @@ func RunGreeter(cnfOpts options.Options, register registry.Registry) error {
 		grpcx.WithPrometheus(cnf.GetString("metrics.listen")),
 		grpcx.WithRegistry(register, greeterSrvName, cnf.GetString("registryListen")),
 	}
-	if cnf.GetBool("jwt.enable") {
-		if cnf.IsSet("jwt.public-key") {
-			if err := config.ResetFromSource(cnf, "jwt.public-key"); err != nil {
-				panic(err)
-			}
-		}
-		opts = append(opts, grpcx.WithAuthFunc(grpcx.JwtAuthFunc(cnf.GetStringMap("jwt"))))
-	}
+	opts = appendAuthInterceptor(cnf, opts)
 	server, err := grpcx.Micro(appName, opts...)
 
 	if err != nil {

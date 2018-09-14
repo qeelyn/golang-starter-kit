@@ -27,24 +27,6 @@ func init() {
 	Caches = make(map[string]cache.Cache)
 }
 
-func NewCache(cnf map[string]interface{}) error {
-	for key, value := range cnf {
-		config := value.(map[string]interface{})
-		if ins, err := cache.NewCache(config["type"].(string), config); err != nil {
-			return err
-		} else {
-			Caches[key] = ins
-			if Cache == nil && key == "default" {
-				Cache = ins
-			}
-		}
-	}
-	if len(Caches) == 0 {
-		panic("initial cache failure,please check the config")
-	}
-	return nil
-}
-
 func GetUserId(ctx context.Context) string {
 	v := ctx.Value("userid")
 	if v == nil {
