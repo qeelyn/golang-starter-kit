@@ -5,7 +5,9 @@ import (
 	navErr "errors"
 	"github.com/gin-gonic/gin"
 	"github.com/graph-gophers/graphql-go"
+	"github.com/opentracing/opentracing-go"
 	"github.com/qeelyn/gin-contrib/auth"
+	"github.com/qeelyn/gin-contrib/tracing"
 	"github.com/qeelyn/go-common/logger"
 	"github.com/qeelyn/golang-starter-kit/gateway/app"
 	"github.com/qeelyn/golang-starter-kit/gateway/errors"
@@ -75,6 +77,13 @@ func (t *GraphQL) Query(c *gin.Context) {
 		responses = make([]*graphql.Response, n)
 		wg        sync.WaitGroup
 	)
+	spanCtx, _ := tracing.SpanFromContext(c)
+	if spanCtx != nil {
+		span := opentracing.StartSpan(c.Request.RequestURI, opentracing.ChildOf(spanCtx))
+		ctx = opentracing.ContextWithSpan(ctx, span)
+		defer span.Finish()
+	}
+
 	wg.Add(n)
 	for i, q := range req.queries {
 		go func(i int, q query) {

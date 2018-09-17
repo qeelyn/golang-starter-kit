@@ -53,7 +53,11 @@ func appendAuthInterceptor(viper *viper.Viper, opts []grpcx.Option) []grpcx.Opti
 	return opts
 }
 
-func newBatchCache(batchCnf map[string]interface{}) (caches map[string]cache.Cache, err error) {
+func newBatchCache(viper *viper.Viper) (caches map[string]cache.Cache, err error) {
+	if viper.IsSet("cache") {
+		return nil, nil
+	}
+	batchCnf := viper.GetStringMap("cache")
 	caches = make(map[string]cache.Cache)
 	for key, value := range batchCnf {
 		cnf := value.(map[string]interface{})

@@ -42,10 +42,8 @@ func RunGateway(cnfOpts options.Options, register registry.Registry) error {
 	app.Logger = newLogger(app.Config)
 	defer app.Logger.GetZap().Sync()
 
-	if app.Config.IsSet("cache") {
-		if app.Caches, err = newBatchCache(app.Config.GetStringMap("cache")); err != nil {
-			panic(err)
-		}
+	if app.Caches, err = newBatchCache(app.Config); err != nil {
+		panic(err)
 	}
 	//tracing
 	tracer = newTracing(app.Config, appName)
