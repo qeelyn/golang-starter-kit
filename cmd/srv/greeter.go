@@ -67,7 +67,6 @@ func RunGreeter(cnfOpts options.Options, register registry.Registry) error {
 
 	service := greetersrv.NewGreeterService()
 	service.Db = db
-	service.Logger = dlog
 
 	var opts = []grpcx.Option{
 		grpcx.WithTracer(tracer),
