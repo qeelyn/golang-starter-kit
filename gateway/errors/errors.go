@@ -4,6 +4,8 @@ import (
 	"errors"
 	graphql "github.com/graph-gophers/graphql-go/errors"
 	"github.com/qeelyn/gin-contrib/errorhandle"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 var (
@@ -11,41 +13,25 @@ var (
 	ErrLoaderWrongType  = errors.New("LOADER_WRONG_TYPE")
 	ErrPermissionDenied = errors.New("PERMISSION_DENIED")
 	ErrUnauthorized     = errors.New("UNAUTHORIZED")
+	ErrStockNoTFound    = errors.New("StockNoTFound")
+	ErrGRPCUnavailable  = errors.New("GRPCUnavailable")
+	ErrDeadlineExceeded = errors.New("DeadlineExceeded")
 )
-
-type slicer interface {
-	Slice() []error
-}
-
-type indexedCauser interface {
-	Index() int
-	Cause() error
-}
 
 func Expand(errs []*graphql.QueryError) []*graphql.QueryError {
 	expanded := make([]*graphql.QueryError, 0, len(errs))
 
 	for _, err := range errs {
 		switch t := err.ResolverError.(type) {
-		case slicer:
-			for _, e := range t.Slice() {
-				qe := &graphql.QueryError{
-					Message:   err.Message,
-					Locations: err.Locations,
-					Path:      err.Path,
-				}
-
-				if ic, ok := e.(indexedCauser); ok {
-					qe.Path = append(qe.Path, ic.Index())
-					if errorhandle.ErrMessage != nil {
-						qe.Message = errorhandle.ErrMessage.GetErrorDescription(ic.Cause()).Message
-					} else {
-						qe.Message = ic.Cause().Error()
-					}
-				}
-
-				expanded = append(expanded, qe)
+		case interface{ GRPCStatus() *status.Status }: //for grpc
+			switch t.GRPCStatus().Code() {
+			case codes.DeadlineExceeded: //timeout
+				err.Message = errorhandle.ErrMessage.GetErrorDescription(ErrDeadlineExceeded).Message
+			case codes.Unavailable:
+				err.Message = errorhandle.ErrMessage.GetErrorDescription(ErrGRPCUnavailable).Message
+			default:
 			}
+			expanded = append(expanded, err)
 		default:
 			if errorhandle.ErrMessage != nil && err.ResolverError != nil {
 				err.Message = errorhandle.ErrMessage.GetErrorDescription(err.ResolverError).Message
@@ -56,3 +42,16 @@ func Expand(errs []*graphql.QueryError) []*graphql.QueryError {
 
 	return expanded
 }
+
+//func handError(err *graphql.QueryError) *graphql.QueryError {
+//	switch t := err.ResolverError.(type) {
+//	case indexedCauser:
+//		qe := &graphql.QueryError{
+//			Message:   err.Message,
+//			Locations: err.Locations,
+//			Path:      err.Path,
+//		}
+//	default:
+//		return err
+//	}
+//}

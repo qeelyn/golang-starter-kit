@@ -112,6 +112,8 @@ github.com/qeelyn/gin-contrib v0.0.0-20180913102713-0db5f862405c h1:OFGLZSIaHh12
 github.com/qeelyn/gin-contrib v0.0.0-20180913102713-0db5f862405c/go.mod h1:FxZt9AqBB/tyVsQ4Z9Uqu6TSHwRpoxuUHaLKPN38BW4=
 github.com/qeelyn/gin-contrib v0.0.0-20180917034423-c9fb56c4bd11 h1:/vgAzf/T1H8rJ3OOAuEawDh1+e4nOFSW4VmwV0dqSwU=
 github.com/qeelyn/gin-contrib v0.0.0-20180917034423-c9fb56c4bd11/go.mod h1:FxZt9AqBB/tyVsQ4Z9Uqu6TSHwRpoxuUHaLKPN38BW4=
+github.com/qeelyn/gin-contrib v0.0.0-20180918163611-61299f9ae196 h1:Vzb089uelFMn8eskgCX278jKGQThh1qU6QkQWQgU2bg=
+github.com/qeelyn/gin-contrib v0.0.0-20180918163611-61299f9ae196/go.mod h1:5cBDVl3b7GgdE6ON3vLR0I0Nf9RZyEfvjO2DeuDv4ng=
 github.com/qeelyn/go-common v0.0.0-20180717161004-65a10cfbdf71 h1:GngW8nmTE8TUcd6veNnyF28OrU4otd8h54aD5nJ8iT8=
 github.com/qeelyn/go-common v0.0.0-20180717161004-65a10cfbdf71/go.mod h1:CUkwNd6P/AJKTdje7nboH1ybEZfCMZ42iLiIKIlzdos=
 github.com/qeelyn/go-common v0.0.0-20180829020756-387d0c20df18 h1:4ZZIjL5CNEDH2Z8geRK/5RjCLNZec8yr5RqUjVB0ZkU=
@@ -124,6 +126,9 @@ github.com/qeelyn/go-common v0.0.0-20180913030542-6794f306cb24 h1:p4som04gX4tL85
 github.com/qeelyn/go-common v0.0.0-20180913030542-6794f306cb24/go.mod h1:CmjWa21/qtqaPX91lJBGb7YbGkpDvrj5zvwCJpXX2xU=
 github.com/qeelyn/go-common v0.0.0-20180917030810-28f672373ba9 h1:nJQJ9WTeLFuiMLwa2zSW44uSXeolISyVbsC0FS/efGs=
 github.com/qeelyn/go-common v0.0.0-20180917030810-28f672373ba9/go.mod h1:CmjWa21/qtqaPX91lJBGb7YbGkpDvrj5zvwCJpXX2xU=
+github.com/qeelyn/go-common v0.0.0-20180918163346-2e73381a4f74/go.mod h1:CmjWa21/qtqaPX91lJBGb7YbGkpDvrj5zvwCJpXX2xU=
+github.com/qeelyn/go-common v0.0.0-20180922041231-4a94abf012df h1:Z3BHXqroBUxV6plWoHN+DnyMYEkU0if0r+Myj2Eirzc=
+github.com/qeelyn/go-common v0.0.0-20180922041231-4a94abf012df/go.mod h1:CmjWa21/qtqaPX91lJBGb7YbGkpDvrj5zvwCJpXX2xU=
 github.com/qeelyn/graphql-go v0.0.0-20180604122119-0b810f691a45 h1:/QM2eEZXjE62c5Zr6z7i51kD29aD8DjldSKOg7DOer0=
 github.com/qeelyn/graphql-go v0.0.0-20180604122119-0b810f691a45/go.mod h1:eJ875H0VDw7pIb9avwzP7KZxgR39ZxAetINiDXaEXuo=
 github.com/spf13/afero v1.1.1 h1:Lt3ihYMlE+lreX1GS4Qw4ZsNpYQLxIXKBTEOXm3nt6I=

@@ -4,19 +4,17 @@ import (
 	"context"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"github.com/grpc-ecosystem/go-grpc-prometheus"
+	"github.com/grpc-ecosystem/go-grpc-middleware/logging/zap"
 	"github.com/opentracing/opentracing-go"
 	"github.com/qeelyn/gin-contrib/errorhandle"
 	ginTracing "github.com/qeelyn/gin-contrib/tracing"
 	"github.com/qeelyn/go-common/config"
 	"github.com/qeelyn/go-common/config/options"
-	"github.com/qeelyn/go-common/grpcx/dialer"
 	"github.com/qeelyn/go-common/grpcx/registry"
 	"github.com/qeelyn/go-common/logger"
 	"github.com/qeelyn/golang-starter-kit/gateway/app"
 	"github.com/qeelyn/golang-starter-kit/gateway/router"
 	"github.com/qeelyn/golang-starter-kit/schemas/greeter"
-	"google.golang.org/grpc"
 	"log"
 	"net/http"
 	"os"
@@ -40,18 +38,20 @@ func RunGateway(cnfOpts options.Options, register registry.Registry) error {
 	app.IsDebug = app.Config.GetBool("debug")
 	// create the logger
 	app.Logger = newLogger(app.Config)
-	defer app.Logger.GetZap().Sync()
+	defer app.Logger.Strict().Sync()
+	//use grpc log for rpc client
+	grpc_zap.ReplaceGrpcLogger(app.Logger.Strict())
 
 	if app.Caches, err = newBatchCache(app.Config); err != nil {
 		panic(err)
 	}
 	//tracing
 	tracer = newTracing(app.Config, appName)
-	tracerCnf := map[string]interface{}{"useOpentracing": app.Config.IsSet("opentracing")}
-	app.TracerFunc = ginTracing.TracingHandleFunc(tracerCnf)
+
+	app.TracerFunc = ginTracing.HandleFunc(map[string]interface{}{"useOpentracing": tracer != nil})
 
 	//rpc client
-	cc := newDialer(app.Config.GetString("rpc.greeter"), tracer)
+	cc := newDialer(true, app.Config.Sub("rpc.greeter"), tracer)
 	app.GreeterClient = greeter.NewGreeterClient(cc)
 
 	router := routers.DefaultRouter()
@@ -68,30 +68,12 @@ func RunGateway(cnfOpts options.Options, register registry.Registry) error {
 	return nil
 }
 
-func newDialer(serviceName string, tracer opentracing.Tracer) *grpc.ClientConn {
-	cc, err := dialer.Dial(serviceName,
-		dialer.WithDialOption(
-			grpc.WithInsecure(),
-			grpc.WithBalancerName("round_robin"),
-		),
-		dialer.WithUnaryClientInterceptor(
-			grpc_prometheus.UnaryClientInterceptor,
-			dialer.WithAuth(),
-		),
-		dialer.WithTracer(tracer),
-	)
-	if err != nil {
-		log.Panicf("dialer error: %v", err)
-	}
-	return cc
-}
-
 func initRouter(g *gin.Engine) {
 	g.Use(app.TracerFunc)
 	if app.Config.IsSet("log.access") {
 		c := logger.NewFileLogger(app.Config.GetStringMap("log.access"))
 		accessLogger := logger.NewLogger(c)
-		g.Use(app.AccessLogHandleFunc(accessLogger.GetZap(), time.RFC3339, false))
+		g.Use(app.AccessLogHandleFunc(accessLogger.Strict(), time.RFC3339, false))
 	}
 	// load error messages
 	ef := app.Config.GetString("error-template")

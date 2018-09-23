@@ -39,7 +39,7 @@ func RunGreeter(cnfOpts options.Options, register registry.Registry) error {
 	appName, listen, isDebug := cnf.GetString("appname"), cnf.GetString("listen"), cnf.GetBool("debug")
 	// create the logger
 	dlog = newLogger(cnf)
-	defer dlog.GetZap().Sync()
+	defer dlog.Strict().Sync()
 
 	dlog.ToZapField = func(values []interface{}) []zapcore.Field {
 		return gormx.CreateGormLog(values).ToZapFields()
@@ -71,12 +71,14 @@ func RunGreeter(cnfOpts options.Options, register registry.Registry) error {
 
 	var opts = []grpcx.Option{
 		grpcx.WithTracer(tracer),
-		grpcx.WithLogger(service.Logger.GetZap()),
-		grpcx.WithUnaryServerInterceptor(grpc_zap.PayloadUnaryServerInterceptor(service.Logger.GetZap(), serverPayloadLoggingDecider)),
+		grpcx.WithLogger(dlog.Strict()),
+		grpcx.WithUnaryServerInterceptor(grpc_zap.PayloadUnaryServerInterceptor(dlog.Strict(), serverPayloadLoggingDecider)),
 		grpcx.WithPrometheus(cnf.GetString("metrics.listen")),
 		grpcx.WithRegistry(register, greeterSrvName, cnf.GetString("registryListen")),
 	}
-	opts = appendAuthInterceptor(cnf, opts)
+
+	opts = tryAppendKeepAlive(cnf, opts)
+	opts = tryAppendAuthInterceptor(cnf, opts)
 	server, err := grpcx.Micro(appName, opts...)
 
 	if err != nil {

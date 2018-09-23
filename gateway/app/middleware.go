@@ -4,12 +4,13 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
+	"fmt"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
-	"github.com/pkg/errors"
 	"github.com/qeelyn/gin-contrib/auth"
-	"github.com/qeelyn/gin-contrib/tracing"
+	commonLogger "github.com/qeelyn/go-common/logger"
 	errors2 "github.com/qeelyn/golang-starter-kit/gateway/errors"
 	"go.uber.org/zap"
 	"io"
@@ -70,7 +71,7 @@ func AccessLogHandleFunc(logger *zap.Logger, timeFormat string, utc bool) gin.Ha
 			zap.String("user-agent", c.Request.UserAgent()),
 			zap.String("time", end.Format(timeFormat)),
 			zap.Duration("latency", latency),
-			tracing.TracingField(c, logger),
+			commonLogger.TraceIdField(c),
 		)
 	}
 }
@@ -95,7 +96,7 @@ func NewAuthMiddleware(config map[string]interface{}) *auth.GinJWTMiddleware {
 		UnauthorizedHandle: func(c *gin.Context, code int, message string) bool {
 			if IsDebug && c.GetHeader("Authorization") == "" {
 				if tid, ok := config["testuserid"]; ok {
-					c.Set("userId", tid.(string))
+					c.Set("userid", tid.(string))
 				}
 				c.Next()
 				return false
@@ -144,7 +145,7 @@ func NewCheckAccessMiddleware(config map[string]interface{}) *auth.CheckAccess {
 				"params":     params,
 			})
 			if err != nil {
-				Logger.Errorf("error on CheckFunc : %s", err)
+				Logger.Strict().Error(fmt.Sprintf("error on CheckFunc : %s", err))
 				return http.StatusBadRequest
 			}
 			client := http.Client{
@@ -157,7 +158,7 @@ func NewCheckAccessMiddleware(config map[string]interface{}) *auth.CheckAccess {
 			if authRes, err := client.Do(req); err == nil {
 				return authRes.StatusCode
 			} else {
-				Logger.Errorf("error on auth client request : %s", err)
+				Logger.Strict().Error(fmt.Sprintf("error on auth client request : %s", err))
 				return http.StatusInternalServerError
 			}
 		},
@@ -183,7 +184,7 @@ func CheckAccess(ctx context.Context, permission string, params map[string]inter
 	if code := CheckAccessMiddleware.CheckFunc(req, userId, permission, params); code != http.StatusOK {
 		if code == http.StatusForbidden {
 			err = errors2.ErrPermissionDenied
-			Logger.Warnf("userId %s has no permission at %s", userId, permission)
+			Logger.Strict().Warn(fmt.Sprintf("userId %s has no permission at %s", userId, permission))
 		}
 		err = errors.New(http.StatusText(code))
 	}

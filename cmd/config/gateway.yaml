@@ -41,4 +41,5 @@ auth:
 #    TraceContextHeaderName: trace.traceid
 
 rpc:
-  greeter: :18001 # if use etcd ,the rpc connection will be: qeelyn://author/srv-greeter
+  greeter:
+    name: :18001 # if use etcd ,the rpc connection will be: qeelyn://author/srv-greeter

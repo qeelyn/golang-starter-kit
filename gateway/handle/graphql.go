@@ -58,7 +58,7 @@ func NewGraphqlLogger(l *logger.Logger) *graphqlLoggerAdapter {
 }
 
 func (t *graphqlLoggerAdapter) LogPanic(ctx context.Context, value interface{}) {
-	app.Logger.Error(value)
+	app.Logger.WithContext(ctx).Error(value.(string))
 }
 
 func (t *GraphQL) Query(c *gin.Context) {

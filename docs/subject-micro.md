@@ -1,5 +1,4 @@
-微服务-microservices
-====================
+# 微服务-microservices
 本开发套件提供了很简单的方式来支持微服务架构.具备以下能力
 
 * 服务发现与注册: 采用基于etcd的方式,支持`HOSTIP`环境变量,简化配置
@@ -12,8 +11,9 @@
 
 这些能力可通过grpcx.Option来初始化开启
 
-服务构建
--------------
+## 服务构建
+
+可通过`go-common/grpx`包提供的默认定义初始化.用户定制要求高的,可参考mirco方法实现
 ```    
     tracer := tracing.NewTracer(app.Config.Sub("opentracing"), appName)
 	serverPayloadLoggingDecider := func(ctx context.Context, fullMethodName string, servingObject interface{}) bool {
@@ -51,7 +51,7 @@
 	return nil
 ```
 
-#### 注册配置
+### 注册配置
 
 以qeelyn://author为基地址,相关参数如下
 ```
@@ -62,8 +62,7 @@ registryListen: ":8033" 服务地址
 如果设置了HOSTIP环境变理,配置文件为`:8033`格式的变根据环境变量修改成`${HOSTIP}:8033`
 该支持主要为让不同机器保持相同的配置.
 
-go客户端
-----------
+### go客户端
 
 基于grpc的注册与发现可通过配置的方式
 * 服务名: 采用GRPC的naming方式,格式如: qeelyn://author/srv-pool
@@ -92,3 +91,15 @@ func newDialer(serviceName string, tracer opentracing.Tracer) *grpc.ClientConn {
 	app.PoolClient = pool.NewPoolServiceClient(poolcc)
 
 ```
+
+### 复杂网络下的rpc通信
+
+* 心跳
+采用gRPC长连接方式构建微服务通信,已经考虑到心跳设计,对于简单环境下,默认即可.但在复杂网络环境下,必须考虑无活动连接被防火墙释放问题.如
+客户IDC网络与云环境的联通情况下,需要自定义心跳,特别需要采用双向心跳,一般只需要定义发送间隔.
+
+    客户端: 在rpc下定义keepalive
+    服务端: 在根配置下定义keepalive
+    
+* 断线重连
+由gRPC定义实现
