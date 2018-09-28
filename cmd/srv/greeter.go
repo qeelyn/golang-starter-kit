@@ -81,13 +81,13 @@ func RunGreeter(cnfOpts options.Options, register registry.Registry) error {
 	server, err := grpcx.Micro(appName, opts...)
 
 	if err != nil {
-		panic(fmt.Errorf(greeterSrvName+" error:%s", err))
+		panic(fmt.Errorf("%s server start error:%s", greeterSrvName, err))
 	}
 
 	rpc := server.BuildGrpcServer()
 	greeter.RegisterGreeterServer(rpc, service)
 	if err = server.Run(rpc, listen); err != nil {
-		return fmt.Errorf("Server run error:", err)
+		return fmt.Errorf("%s server run error:%s", greeterSrvName, err)
 	}
 	return nil
 }

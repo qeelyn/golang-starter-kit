@@ -13,7 +13,6 @@ var (
 	ErrLoaderWrongType  = errors.New("LOADER_WRONG_TYPE")
 	ErrPermissionDenied = errors.New("PERMISSION_DENIED")
 	ErrUnauthorized     = errors.New("UNAUTHORIZED")
-	ErrStockNoTFound    = errors.New("StockNoTFound")
 	ErrGRPCUnavailable  = errors.New("GRPCUnavailable")
 	ErrDeadlineExceeded = errors.New("DeadlineExceeded")
 )
@@ -42,16 +41,3 @@ func Expand(errs []*graphql.QueryError) []*graphql.QueryError {
 
 	return expanded
 }
-
-//func handError(err *graphql.QueryError) *graphql.QueryError {
-//	switch t := err.ResolverError.(type) {
-//	case indexedCauser:
-//		qe := &graphql.QueryError{
-//			Message:   err.Message,
-//			Locations: err.Locations,
-//			Path:      err.Path,
-//		}
-//	default:
-//		return err
-//	}
-//}

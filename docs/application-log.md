@@ -38,7 +38,7 @@ log:
         zap.String("query", query),
         zap.ByteString("body", bodyCopy.Bytes()),
         zap.String("ip", c.ClientIP()),
-        zap.String("auth", c.GetString("userId")),
+        zap.String("auth", c.GetString("userid")),
         zap.String("user-agent", c.Request.UserAgent()),
         zap.String("time", end.Format(timeFormat)),
         zap.Duration("latency", latency),

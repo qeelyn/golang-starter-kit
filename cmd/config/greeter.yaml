@@ -21,7 +21,6 @@ jwt:
   enable: false
   public-key: "" # pem file if use rs algorithm
   encryption-key: "abcderf"
-  algorithm: "HS256"
 
 auth:
   auth-server: ""

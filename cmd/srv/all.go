@@ -8,6 +8,7 @@ import (
 	qconfig "github.com/qeelyn/go-common/config"
 	"github.com/qeelyn/go-common/config/options"
 	"github.com/qeelyn/go-common/grpcx"
+	"github.com/qeelyn/go-common/grpcx/authfg"
 	"github.com/qeelyn/go-common/grpcx/dialer"
 	"github.com/qeelyn/go-common/grpcx/registry"
 	"github.com/qeelyn/go-common/grpcx/tracing"
@@ -42,7 +43,7 @@ func newDialer(isGateway bool, viper *viper.Viper, tracer opentracing.Tracer, go
 		dialer.WithDialOption(dialOptions...),
 		dialer.WithUnaryClientInterceptor(
 			grpc_prometheus.UnaryClientInterceptor,
-			dialer.WithAuth(),
+			authfg.WithAuthClient(isGateway),
 		),
 		dialer.WithTracer(tracer),
 		dialer.WithTraceIdFunc(tracing.DefaultClientTraceIdFunc(isGateway)),
@@ -85,12 +86,11 @@ func tryAppendAuthInterceptor(viper *viper.Viper, opts []grpcx.Option) []grpcx.O
 				panic(err)
 			}
 		}
-		opts = append(opts, grpcx.WithAuthFunc(grpcx.JwtAuthFunc(viper.GetStringMap("jwt"))))
+		opts = append(opts, grpcx.WithAuthFunc(authfg.ServerJwtAuthFunc(viper.GetStringMap("jwt"))))
 	}
 	return opts
 }
 
-// 如果服务在复杂网络环境下,需要增加心跳选项
 func tryAppendKeepAlive(viper *viper.Viper, opts []grpcx.Option) []grpcx.Option {
 	if viper.IsSet("keepalive") {
 		ksp := keepalive.ServerParameters{
@@ -99,6 +99,22 @@ func tryAppendKeepAlive(viper *viper.Viper, opts []grpcx.Option) []grpcx.Option 
 		return append(opts, grpcx.WithGrpcOption(grpc.KeepaliveParams(ksp)))
 	}
 	return opts
+}
+
+// mgo logger adapter
+type mgoLogger struct {
+	*logger.Logger
+}
+
+func NewMgoLogger(log *logger.Logger) *mgoLogger {
+	return &mgoLogger{
+		Logger: log,
+	}
+}
+
+func (t mgoLogger) Output(calldepth int, s string) error {
+	t.Logger.Sugared().Info(s)
+	return nil
 }
 
 func newBatchCache(viper *viper.Viper) (caches map[string]cache.Cache, err error) {

@@ -16,3 +16,11 @@ Unauthorized:
 LOAD_WRONG_TYPE:
   code: 500
   message: "加载的数据类型不符合"
+
+DeadlineExceeded:
+  code: 408
+  message: "请求超时,请刷新重试"
+
+GRPCUnavailable:
+  code: 503
+  message: "请求超时,请刷新重试"

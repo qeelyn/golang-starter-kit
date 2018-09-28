@@ -16,8 +16,8 @@ require (
 	github.com/pkg/errors v0.8.0
 	github.com/prometheus/client_golang v0.8.0
 	github.com/prometheus/procfs v0.0.0-20180629160828-40f013a808ec // indirect
-	github.com/qeelyn/gin-contrib v0.0.0-20180918163611-61299f9ae196
-	github.com/qeelyn/go-common v0.0.0-20180922041231-4a94abf012df
+	github.com/qeelyn/gin-contrib v0.0.0-20180928072209-bf9bafd6c2c4
+	github.com/qeelyn/go-common v0.0.0-20180928062540-240f2ab79119
 	github.com/spf13/viper v1.1.0
 	github.com/uber/jaeger-client-go v2.14.0+incompatible
 	github.com/vmihailenco/msgpack v3.3.3+incompatible // indirect

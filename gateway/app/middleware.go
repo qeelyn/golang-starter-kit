@@ -10,6 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 	"github.com/qeelyn/gin-contrib/auth"
+	auth2 "github.com/qeelyn/go-common/auth"
 	commonLogger "github.com/qeelyn/go-common/logger"
 	errors2 "github.com/qeelyn/golang-starter-kit/gateway/errors"
 	"go.uber.org/zap"
@@ -51,7 +52,10 @@ func AccessLogHandleFunc(logger *zap.Logger, timeFormat string, utc bool) gin.Ha
 		if orgId := c.GetHeader("Qeelyn-Org-Id"); orgId != "" {
 			c.Set("orgid", orgId)
 		}
-
+		// pass to context
+		if authHeader := c.GetHeader("Authorization"); authHeader != "" {
+			c.Set("authorization", authHeader)
+		}
 		c.Next()
 
 		end := time.Now()
@@ -67,7 +71,7 @@ func AccessLogHandleFunc(logger *zap.Logger, timeFormat string, utc bool) gin.Ha
 			zap.String("query", query),
 			zap.ByteString("body", bodyCopy.Bytes()),
 			zap.String("ip", c.ClientIP()),
-			zap.String("auth", c.GetString("userId")),
+			zap.String("auth", c.GetString("userid")),
 			zap.String("user-agent", c.Request.UserAgent()),
 			zap.String("time", end.Format(timeFormat)),
 			zap.Duration("latency", latency),
@@ -89,10 +93,12 @@ func NewAuthMiddleware(config map[string]interface{}) *auth.GinJWTMiddleware {
 		panic("miss encryption-key setting when in HS signing algorithm")
 	}
 	middle := &auth.GinJWTMiddleware{
-		Realm:            "auth server",
-		PubKeyFile:       pKey,
-		Key:              []byte(eKey),
-		SigningAlgorithm: config["algorithm"].(string), //RS256
+		BearerTokenValidator: &auth2.BearerTokenValidator{
+			Realm:      "auth server",
+			PubKeyFile: pKey,
+			Key:        []byte(eKey),
+		},
+		SigningAlgorithm: algo, //RS256
 		UnauthorizedHandle: func(c *gin.Context, code int, message string) bool {
 			if IsDebug && c.GetHeader("Authorization") == "" {
 				if tid, ok := config["testuserid"]; ok {

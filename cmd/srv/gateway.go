@@ -53,6 +53,7 @@ func RunGateway(cnfOpts options.Options, register registry.Registry) error {
 	//rpc client
 	cc := newDialer(true, app.Config.Sub("rpc.greeter"), tracer)
 	app.GreeterClient = greeter.NewGreeterClient(cc)
+	defer cc.Close()
 
 	router := routers.DefaultRouter()
 	initRouter(router)
