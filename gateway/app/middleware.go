@@ -17,7 +17,6 @@ import (
 	"io"
 	"io/ioutil"
 	"net/http"
-	"path"
 	"strings"
 	"time"
 )
@@ -25,8 +24,6 @@ import (
 var (
 	AuthHanlerFunc        gin.HandlerFunc
 	CheckAccessMiddleware *auth.CheckAccess
-	checkAccessUrl        string
-	checkAccessTimeout    int
 	TracerFunc            gin.HandlerFunc
 )
 
@@ -130,9 +127,9 @@ func NewAuthMiddleware(config map[string]interface{}) *auth.GinJWTMiddleware {
 
 // userId will be exist after bearer auth middleware execute
 func NewCheckAccessMiddleware(config map[string]interface{}) *auth.CheckAccess {
-	checkAccessUrl = path.Join(config["auth-server"].(string), config["check-access"].(string))
+	checkAccessUrl := config["auth-server"].(string) + config["check-access"].(string)
 	routerPrefix := config["router-prefix"].(string)
-	checkAccessTimeout = config["check-access-timeout"].(int)
+	checkAccessTimeout := config["check-access-timeout"].(int)
 	instance := &auth.CheckAccess{
 		GetPermissionFunc: func(context *gin.Context) string {
 			reqPath := context.Request.URL.Path

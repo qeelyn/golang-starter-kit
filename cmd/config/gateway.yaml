@@ -25,7 +25,7 @@ jwt:
 
 auth:
   auth-server: ""
-  check-access: ""
+  check-access: "/access/can"
   check-access-timeout: 1000 #microsecond
   router-prefix: ""
 

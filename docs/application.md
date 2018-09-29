@@ -29,9 +29,9 @@ appmode: debug
 
 * [缓存](application-cache.md)
 * [数据库](application-db.md)
-* [授权](auth.md)
+* [认证与授权](application-auth.md)
 * [OpenTracing](application-opentracing.md) 分布式跟踪
-* [metrics](application-metrics.md) 系统运行指标监控
+* [Metrics](application-metrics.md) 系统运行指标监控
 
 ### 本地配置
 
