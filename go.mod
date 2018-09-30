@@ -3,6 +3,7 @@ module github.com/qeelyn/golang-starter-kit
 require (
 	github.com/bradfitz/gomemcache v0.0.0-20180627213657-7886924cd2b3 // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
+	github.com/gin-contrib/gzip v0.0.0-20180827025821-1c01330167a8
 	github.com/gin-gonic/gin v1.3.0
 	github.com/golang/protobuf v1.1.0
 	github.com/graph-gophers/dataloader v0.0.0-20180104184831-78139374585c

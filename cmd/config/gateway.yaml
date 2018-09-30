@@ -1,6 +1,7 @@
 appname: gst-gateway
 listen: ":18000"
 appmode: release
+gzip: 0
 log:
   file:
     filename: runtime/gateway.log
@@ -42,3 +43,4 @@ auth:
 rpc:
   greeter:
     name: :18001 # if use etcd ,the rpc connection will be: qeelyn://author/srv-greeter
+    #compressor: gzip # turn on if client and server communicate through internet

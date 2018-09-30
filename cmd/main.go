@@ -10,6 +10,7 @@ import (
 	"github.com/qeelyn/go-common/grpcx/registry"
 	_ "github.com/qeelyn/go-common/grpcx/registry/etcdv3"
 	"github.com/qeelyn/golang-starter-kit/cmd/srv"
+	_ "google.golang.org/grpc/encoding/gzip"
 	"google.golang.org/grpc/resolver"
 	"log"
 	"net/http"

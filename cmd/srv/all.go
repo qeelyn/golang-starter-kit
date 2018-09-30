@@ -30,10 +30,16 @@ func RunAll(cnfOpts options.Options, register registry.Registry) error {
 
 // viper is the section for rpc
 func newDialer(isGateway bool, viper *viper.Viper, tracer opentracing.Tracer, gopts ...grpc.DialOption) *grpc.ClientConn {
+	dcopts := make([]grpc.CallOption, 0)
+	if viper.IsSet("compressor") {
+		dcopts = append(dcopts, grpc.UseCompressor(viper.GetString("compressor")))
+		grpc.WithDefaultCallOptions(grpc.UseCompressor("gzip"))
+	}
 	dialOptions := append(gopts,
 		grpc.WithWaitForHandshake(),
 		grpc.WithInsecure(),
 		grpc.WithBalancerName("round_robin"),
+		grpc.WithDefaultCallOptions(dcopts...),
 	)
 	if viper.GetInt("keepalive") != 0 {
 		cp := keepalive.ClientParameters{Time: time.Duration(viper.GetInt("keepalive")) * time.Second}

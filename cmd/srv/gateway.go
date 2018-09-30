@@ -3,6 +3,7 @@ package srv
 import (
 	"context"
 	"fmt"
+	"github.com/gin-contrib/gzip"
 	"github.com/gin-gonic/gin"
 	"github.com/grpc-ecosystem/go-grpc-middleware/logging/zap"
 	"github.com/opentracing/opentracing-go"
@@ -33,8 +34,7 @@ func RunGateway(cnfOpts options.Options, register registry.Registry) error {
 		return err
 	}
 
-	appName := app.Config.GetString("appname")
-	listen := app.Config.GetString("listen")
+	appName, listen := app.Config.GetString("appname"), app.Config.GetString("listen")
 	app.IsDebug = app.Config.GetBool("debug")
 	// create the logger
 	app.Logger = newLogger(app.Config)
@@ -71,6 +71,9 @@ func RunGateway(cnfOpts options.Options, register registry.Registry) error {
 
 func initRouter(g *gin.Engine) {
 	g.Use(app.TracerFunc)
+	if glevel := app.Config.GetInt("gzip"); glevel != 0 {
+		g.Use(gzip.Gzip(glevel))
+	}
 	if app.Config.IsSet("log.access") {
 		c := logger.NewFileLogger(app.Config.GetStringMap("log.access"))
 		accessLogger := logger.NewLogger(c)
