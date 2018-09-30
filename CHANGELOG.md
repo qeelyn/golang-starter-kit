@@ -2,7 +2,7 @@
 
 本更新涉及的包更新记录包括go-common,gin-contrib
 
-### 2018-09-28
+### 2018-09-30
 
 * enh: http,RPC通讯增加gzip支持
 
