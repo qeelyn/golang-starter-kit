@@ -6,8 +6,6 @@ log:
   file:
     filename: runtime/greeter.log
     maxsize: 100
-    maxbackups: 3
-    maxage: 28
     level: 1 #debug:-1;info:0;warning:1;error:2;DPanic:3;Panic:4;Fatal:5
 
 error-template: config/errors.zh.yaml
@@ -40,4 +38,5 @@ auth:
 
 
 metrics:
+  enable: false
   backend: prometheus

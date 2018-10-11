@@ -64,7 +64,7 @@ func AccessLogHandleFunc(logger *zap.Logger, timeFormat string, utc bool) gin.Ha
 		logger.Info(reqPath,
 			zap.Int("status", c.Writer.Status()),
 			zap.String("method", c.Request.Method),
-			zap.String("reqPath", reqPath),
+			zap.String("path", reqPath),
 			zap.String("query", query),
 			zap.ByteString("body", bodyCopy.Bytes()),
 			zap.String("ip", c.ClientIP()),

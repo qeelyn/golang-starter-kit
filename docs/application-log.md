@@ -60,4 +60,6 @@ ctxzap.Extract(ctx).Error("query holding error:" + err.Error())
 ```
 > 取消了之前在微服务构建增加Log组件的方法.统一使用ctxzap
 
+相关专题: [日志采集](subject-log.md)
+
 [下一节 Service](service-layer.md)

@@ -1,8 +1,6 @@
 package srv
 
 import (
-	"context"
-	"fmt"
 	"github.com/gin-contrib/gzip"
 	"github.com/gin-gonic/gin"
 	"github.com/grpc-ecosystem/go-grpc-middleware/logging/zap"
@@ -16,10 +14,7 @@ import (
 	"github.com/qeelyn/golang-starter-kit/gateway/app"
 	"github.com/qeelyn/golang-starter-kit/gateway/router"
 	"github.com/qeelyn/golang-starter-kit/schemas/greeter"
-	"log"
 	"net/http"
-	"os"
-	"os/signal"
 	"time"
 )
 
@@ -63,10 +58,7 @@ func RunGateway(cnfOpts options.Options, register registry.Registry) error {
 		Handler: router,
 	}
 
-	if err = graceful(server); err != nil {
-		return fmt.Errorf("Server run error:", err)
-	}
-	return nil
+	return server.ListenAndServe()
 }
 
 func initRouter(g *gin.Engine) {
@@ -105,24 +97,4 @@ func initRouter(g *gin.Engine) {
 
 	routers.SetupRouterGroup(g)
 	routers.SetGraphQlRouterGroup(g)
-}
-
-func graceful(srv *http.Server) error {
-	go func() {
-		// service connections
-		log.Println("http Server is ready for listening at:", srv.Addr)
-		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			log.Fatalf("listen: %s\n", err)
-		}
-	}()
-
-	quit := make(chan os.Signal)
-	signal.Notify(quit, os.Interrupt)
-	<-quit
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
-	if err := srv.Shutdown(ctx); err != nil {
-		return err
-	}
-	return nil
 }

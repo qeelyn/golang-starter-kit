@@ -1,14 +1,14 @@
 package srv
 
 import (
+	"context"
 	"fmt"
+	"github.com/grpc-ecosystem/go-grpc-middleware/logging/zap"
 	"github.com/qeelyn/go-common/config/options"
 	"github.com/qeelyn/go-common/logger"
 	"github.com/spf13/viper"
 	"go.uber.org/zap/zapcore"
 
-	"context"
-	"github.com/grpc-ecosystem/go-grpc-middleware/logging/zap"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	"github.com/opentracing/opentracing-go"
@@ -60,22 +60,25 @@ func RunGreeter(cnfOpts options.Options, register registry.Registry) error {
 	//opentracing
 	tracer = newTracing(cnf, appName)
 
-	// debug enable ?
-	serverPayloadLoggingDecider := func(ctx context.Context, fullMethodName string, servingObject interface{}) bool {
-		return isDebug
-	}
-
 	service := greetersrv.NewGreeterService()
 	service.Db = db
 
 	var opts = []grpcx.Option{
 		grpcx.WithTracer(tracer),
 		grpcx.WithLogger(dlog.Strict()),
-		grpcx.WithUnaryServerInterceptor(grpc_zap.PayloadUnaryServerInterceptor(dlog.Strict(), serverPayloadLoggingDecider)),
-		grpcx.WithPrometheus(cnf.GetString("metrics.listen")),
 		grpcx.WithRegistry(register, greeterSrvName, cnf.GetString("registryListen")),
 	}
+	// Payload log the request and response,it usually use in debug
+	if cnf.IsSet("log.access") {
+		c := logger.NewFileLogger(cnf.GetStringMap("log.access"))
+		accessLogger := logger.NewLogger(c)
+		opts = append(opts, grpcx.WithUnaryServerInterceptor(grpc_zap.PayloadUnaryServerInterceptor(accessLogger.Strict(),
+			func(ctx context.Context, fullMethodName string, servingObject interface{}) bool {
+				return true
+			})))
+	}
 
+	opts = tryAppendMetrics(cnf, opts)
 	opts = tryAppendKeepAlive(cnf, opts)
 	opts = tryAppendAuthInterceptor(cnf, opts)
 	server, err := grpcx.Micro(appName, opts...)

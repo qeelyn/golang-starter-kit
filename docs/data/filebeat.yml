@@ -1,0 +1,8 @@
+filebeat.inputs:
+- type: log
+  paths:
+  - /var/log/system.log
+  - /var/log/wifi.log
+
+output.elasticsearch:
+  hosts: ["myEShost:9200"]

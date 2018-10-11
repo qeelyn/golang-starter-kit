@@ -107,6 +107,13 @@ func tryAppendKeepAlive(viper *viper.Viper, opts []grpcx.Option) []grpcx.Option 
 	return opts
 }
 
+func tryAppendMetrics(viper *viper.Viper, opts []grpcx.Option) []grpcx.Option {
+	if viper.GetBool("metrics.enable") {
+		return append(opts, grpcx.WithPrometheus(viper.GetString("metrics.listen")))
+	}
+	return opts
+}
+
 // mgo logger adapter
 type mgoLogger struct {
 	*logger.Logger
