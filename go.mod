@@ -29,6 +29,7 @@ require (
 )
 
 replace (
+	github.com/graph-gophers/graphql-go => github.com/qeelyn/graphql-go v0.0.0-20180604122119-0b810f691a45
 	golang.org/x/net => github.com/golang/net v0.0.0-20180811021610-c39426892332
 	golang.org/x/sys => github.com/golang/sys v0.0.0-20180810173357-98c5dad5d1a0
 	golang.org/x/text => github.com/golang/text v0.3.0

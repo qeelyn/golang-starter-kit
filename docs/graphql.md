@@ -19,6 +19,12 @@ api
     - schema.graphql
     - schema.go  //资源加载,graphql只需要将内容进行拼接
 ```
+
+go代码文件还依赖go-bindata
+```
+go get -u github.com/jteeuwen/go-bindata/...
+```
+
 Resolver
 -------------
 对定义文件的解释器,为golang实现代码
