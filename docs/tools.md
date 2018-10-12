@@ -35,18 +35,26 @@ dep ensure 同步包
 
 可以将被墙的包通过go.mod文件的replace方式替换,竟味着可以直接指向github.
 如果github也被墙,可以通过gitee导入github的项目,然后将包指向gitee,这样就可以达到不用翻墙开发了
-> 通过gitee访问github,非常之快.目前为止,github又为抽疯了..请忽略gitee的包
+替换获取包常见的命令为
 ```
+vgo get package@[commit|version]
+```
+> 通过gitee访问github,非常之快.目前为止,github又不抽疯了..请忽略gitee的包
+```
+//以下列出常见需要替换的包
 replace (
-	github.com/bradfitz/gomemcache => gitee.com/githubmirror/gomemcache v0.0.0-20180710155616-bc664df96737
-	github.com/coreos/etcd => gitee.com/githubmirror/etcd v3.3.9+incompatible
-	github.com/dgrijalva/jwt-go => gitee.com/githubmirror/jwt-go v3.2.0+incompatible
-	github.com/graph-gophers/graphql-go => github.com/qeelyn/graphql-go v0.0.0-20180604122119-0b810f691a45
-	github.com/uber/jaeger-client-go => gitee.com/githubmirror/jaeger-client-go v2.14.0+incompatible
-	github.com/vmihailenco/msgpack => gitee.com/githubmirror/msgpack v3.3.3+incompatible
-	golang.org/x/net => gitee.com/githubmirror/golang-net v0.0.0-20180811021610-c39426892332
+    //本项目需要
+    github.com/graph-gophers/graphql-go => github.com/qeelyn/graphql-go v0.0.0-20181012014650-03df3acf1181
+	// github
+	golang.org/x/net => github.com/golang/net v0.0.0-20180811021610-c39426892332
 	golang.org/x/sys => github.com/golang/sys v0.0.0-20180810173357-98c5dad5d1a0
 	golang.org/x/text => github.com/golang/text v0.3.0
+	google.golang.org/appengine => github.com/golang/appengine v1.1.0
+	google.golang.org/genproto => github.com/google/go-genproto v0.0.0-20180808183934-383e8b2c3b9e
+	google.golang.org/grpc => github.com/grpc/grpc-go v1.14.0
+    
+    // gitee.com/githubmirror.
+	golang.org/x/net => gitee.com/githubmirror/golang-net v0.0.0-20180811021610-c39426892332
 	google.golang.org/appengine => gitee.com/githubmirror/appengine v1.1.0
 	google.golang.org/genproto => gitee.com/githubmirror/go-genproto v0.0.0-20180808183934-383e8b2c3b9e
 	google.golang.org/grpc => gitee.com/githubmirror/grpc-go v1.14.0

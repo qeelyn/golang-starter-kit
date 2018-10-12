@@ -57,6 +57,8 @@ github.com/graph-gophers/dataloader v0.0.0-20180104184831-78139374585c h1:94S+uo
 github.com/graph-gophers/dataloader v0.0.0-20180104184831-78139374585c/go.mod h1:jk4jk0c5ZISbKaMe8WsVopGB5/15GvGHMdMdPtwlRp4=
 github.com/graph-gophers/graphql-go v0.0.0-20180604122119-0b810f691a45 h1:YE91cGb5Wca7rRkAjR61NY9GSvDfsAPVPlb1OuvVecQ=
 github.com/graph-gophers/graphql-go v0.0.0-20180604122119-0b810f691a45/go.mod h1:aRnZGurV3LlZ1Y+ygyx1mAV6OUfq+nu6OgpJ6jKgZ3g=
+github.com/graph-gophers/graphql-go v0.0.0-20181008023426-a2b6fc39dd10 h1:2rEnR+hRitXRBi8ozdghgDAD4ZXhBKd8VDYECXEM8QI=
+github.com/graph-gophers/graphql-go v0.0.0-20181008023426-a2b6fc39dd10/go.mod h1:aRnZGurV3LlZ1Y+ygyx1mAV6OUfq+nu6OgpJ6jKgZ3g=
 github.com/grpc-ecosystem/go-grpc-middleware v1.0.0 h1:BWIsLfhgKhV5g/oF34aRjniBHLTZe5DNekSjbAjIS6c=
 github.com/grpc-ecosystem/go-grpc-middleware v1.0.0/go.mod h1:FiyG127CGDf3tlThmgyCl78X/SZQqEOJBCDaAfeWzPs=
 github.com/grpc-ecosystem/go-grpc-prometheus v1.2.0 h1:Ovs26xHkKqVztRpIrF/92BcuyuQ/YW4NSIpoGtfXNho=
@@ -140,6 +142,8 @@ github.com/qeelyn/go-common v0.0.0-20181009065420-2a6c43fbc313 h1:HZkOkwZme1iwOt
 github.com/qeelyn/go-common v0.0.0-20181009065420-2a6c43fbc313/go.mod h1:CmjWa21/qtqaPX91lJBGb7YbGkpDvrj5zvwCJpXX2xU=
 github.com/qeelyn/graphql-go v0.0.0-20180604122119-0b810f691a45 h1:/QM2eEZXjE62c5Zr6z7i51kD29aD8DjldSKOg7DOer0=
 github.com/qeelyn/graphql-go v0.0.0-20180604122119-0b810f691a45/go.mod h1:eJ875H0VDw7pIb9avwzP7KZxgR39ZxAetINiDXaEXuo=
+github.com/qeelyn/graphql-go v0.0.0-20181012014650-03df3acf1181 h1:+uSBw6hseqkSLC7Wt6XqcYv3dKD/O8rWA8TaheVRbKo=
+github.com/qeelyn/graphql-go v0.0.0-20181012014650-03df3acf1181/go.mod h1:eJ875H0VDw7pIb9avwzP7KZxgR39ZxAetINiDXaEXuo=
 github.com/spf13/afero v1.1.1 h1:Lt3ihYMlE+lreX1GS4Qw4ZsNpYQLxIXKBTEOXm3nt6I=
 github.com/spf13/afero v1.1.1/go.mod h1:j4pytiNVoe2o6bmDsKpLACNPDBIoEAkihy7loJ1B0CQ=
 github.com/spf13/cast v1.2.0 h1:HHl1DSRbEQN2i8tJmtS6ViPyHx35+p51amrdsiTCrkg=
