@@ -38,7 +38,7 @@
 
 * 服务注册与发现: 实现了[etcd](https://github.com/coreos/etcd),留有其他组件扩展的能力
 * GRPC组件: 主要采用了[grpc-ecosystem](https://github.com/grpc-ecosystem)提供的组件
-* 系统监控: [prometheus](https://prometheus.io),可配合[grafana]()https://grafana.com)搭建监控平台
+* 系统监控: [prometheus](https://prometheus.io),可配合[grafana](https://grafana.com)搭建监控平台
 * 极方面的通过Docker构建部署.可通过[基于jenkins的持续构建](./docs/subject-jenkins.md)进一部了解
 
 本套件可以做什么
@@ -66,9 +66,7 @@
 ```
   make run    
 ```
-看到启用界面时,通过浏览器访问: `http://localhost:18000/graphiql`,这时你看到graphiql都正常时.项目成功运行.
-
-默认默认采用微服务划分,在graphiql中输入
+默认采用微服务结构,通过浏览器访问: `http://localhost:18000/graphiql`,graphiql正常显示时在graphiql中输入:
 ```
 query test {
   hello(name:"qsli") {
@@ -76,7 +74,7 @@ query test {
   }
 }
 ```
-执行即可
+执行,没有看到异常时表示项目正常运行
 
 ### 资源
 
