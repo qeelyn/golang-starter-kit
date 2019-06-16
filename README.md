@@ -18,7 +18,7 @@
 * 采用Service层,并可扩展为RPC服务或微服务
 * 测试环境可配置
 
-本工具包使用了常见的GoPKG,你可以很容易的替换为自己喜欢的包.因为这些流行的PKG进行了良好的抽像.
+本工具包使用了常见的GoPKG,你可以很容易的替换为自己喜欢的包.因为这些流行的PKG进行了良好的抽象.
 
 * 路由框架: [gin](http://github.com/gin-gonic/gin)
 * 数据库及ORM: [gorm](http://github.com/jinzhu/gorm)
