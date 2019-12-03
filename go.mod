@@ -28,12 +28,4 @@ require (
 	gopkg.in/vmihailenco/msgpack.v3 v3.3.3 // indirect
 )
 
-replace (
-	github.com/graph-gophers/graphql-go => github.com/qeelyn/graphql-go v0.0.0-20181012014650-03df3acf1181
-	golang.org/x/net => github.com/golang/net v0.0.0-20180811021610-c39426892332
-	golang.org/x/sys => github.com/golang/sys v0.0.0-20180810173357-98c5dad5d1a0
-	golang.org/x/text => github.com/golang/text v0.3.0
-	google.golang.org/appengine => github.com/golang/appengine v1.1.0
-	google.golang.org/genproto => github.com/google/go-genproto v0.0.0-20180808183934-383e8b2c3b9e
-	google.golang.org/grpc => github.com/grpc/grpc-go v1.14.0
-)
+go 1.13

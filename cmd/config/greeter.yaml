@@ -1,7 +1,7 @@
 appname: srv-greeter
 listen: ":18001"
 registryListen: ":18001"
-appmode: prod
+appmode: dev
 log:
   file:
     filename: runtime/greeter.log

@@ -1,3 +1,24 @@
+##  代理设置
+
+在Go 1.13中，我们可以通过GOPROXY来控制代理，以及通过GOPRIVATE控制私有库不走代理。
+
+设置GOPROXY代理：
+
+    go env -w GOPROXY=https://goproxy.cn,direct
+    设置GOPRIVATE来跳过私有库，比如常用的Gitlab或Gitee，中间使用逗号分隔：
+    go env -w GOPRIVATE=*.gitlab.com,*.gitee.com
+
+如果在运行go mod vendor时，提示Get https://sum.golang.org/lookup/xxxxxx: dial tcp 216.58.200.49:443: i/o timeout，则是因为Go 1.13设置了默认的GOSUMDB=sum.golang.org，这个网站是被墙了的，用于验证包的有效性，可以通过如下命令关闭：
+
+    go env -w GOSUMDB=off
+ 
+可以设置 GOSUMDB="sum.golang.google.cn"， 这个是专门为国内提供的sum 验证服务。
+
+    go env -w GOSUMDB="sum.golang.google.cn"
+
+> 有些IDE(如goland)会集成包管理工具,需要注意一下,是否存在环境变量被覆盖的情况
+
+## go < 1.13
 ### 翻墙
 
 目前套件使用翻墙的主要原因为依赖golang.org的包.而golang.org是被墙的.
